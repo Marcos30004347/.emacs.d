@@ -1,0 +1,8 @@
+emacs.org
+*~
+#*
+auto-save-list/
+elpa/
+*.org
+*.eld
+recentf
