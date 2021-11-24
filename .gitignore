@@ -6,3 +6,5 @@ elpa/
 *.org
 *.eld
 recentf
+.cache/
+.lsp-session-v1
