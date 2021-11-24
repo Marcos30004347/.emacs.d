@@ -8,3 +8,5 @@ elpa/
 recentf
 .cache/
 .lsp-session-v1
+
+!emacs.org
