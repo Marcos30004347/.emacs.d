@@ -112,6 +112,7 @@
 (define-key evil-normal-state-map (kbd "C-b") 'treemacs)
 (define-key evil-normal-state-map (kbd "C-j") 'scroll-down)
 (define-key evil-normal-state-map (kbd "C-k") 'scroll-up)
+(define-key evil-normal-state-map (kbd "C-r") 'replace-regexp)
 
 (define-key evil-normal-state-map (kbd "SPC SPC") 'find-file)
 
@@ -189,15 +190,18 @@
 ;; Set the fixed pitch face
 (set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 150)
 ;; Set the variable pitch face
-(set-face-attribute 'variable-pitch nil :font "Cantarell" :height 295 :weight 'regular)
+(set-face-attribute 'variable-pitch nil :font "Cantarell" :height 150 :weight 'regular)
 
 (use-package dashboard
 	:ensure t
 	:config
+	(setq dashboard-set-heading-icons t)
+	(setq dashboard-set-file-icons t)
+	(setq dashboard-set-navigator t)
 	(setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
-	(setq dashboard-startup-banner "~/.emacs.d/dashboard-logos/rat.txt")
+	(setq dashboard-startup-banner "~/.emacs.d/dashboard-logos/acdc.txt")
 	(setq dashboard-center-content t)
-	(setq dashboard-show-shortcuts nil)
+	(setq dashboard-show-shortcuts t)
 	(setq dashboard-items '((recents  . 5)
 													(bookmarks . 5)
 													(projects . 5)
@@ -205,18 +209,17 @@
 													(registers . 5)))	
 	(dashboard-setup-startup-hook))
 
-(use-package centaur-tabs
-	:demand
-	:config
-
-	(centaur-tabs-mode t)
-	:bind
-	("C-p" . centaur-tabs-backward)
-	("C-n" . centaur-tabs-forward))
-(setq centaur-tabs-style "rounded")
-(setq centaur-tabs-set-icons t)
-(setq centaur-tabs-set-modified-marker t)
-(setq centaur-tabs-modified-marker "*")
+;	(use-package centaur-tabs
+;		:demand
+;		:config
+;		(centaur-tabs-mode t)
+;		:bind
+;		("C-p" . centaur-tabs-backward)
+;		("C-n" . centaur-tabs-forward))
+;	(setq centaur-tabs-style "rounded")
+;	(setq centaur-tabs-set-icons t)
+;	(setq centaur-tabs-set-modified-marker t)
+;	(setq centaur-tabs-modified-marker "*")
 
 (use-package treemacs
 	:ensure t
@@ -266,13 +269,12 @@
 					treemacs-space-between-root-nodes        t
 					treemacs-tag-follow-cleanup              t
 					treemacs-tag-follow-delay                1.5
-					treemacs-text-scale                      nil
 					treemacs-user-mode-line-format           nil
 					treemacs-user-header-line-format         nil
 					treemacs-wide-toggle-width               70
 					treemacs-width                           25
 					treemacs-width-increment                 1
-					treemacs-width-is-initially-locked       t
+					treemacs-width-is-initially-locked       nil
 					treemacs-workspace-switch-cleanup        nil)
 
 		;; The default width and height of the icons is 22 pixels. If you are
@@ -299,6 +301,9 @@
 				("C-x t B"   . treemacs-bookmark)
 				("C-x t C-t" . treemacs-find-file)
 				("C-x t M-t" . treemacs-find-tag)))
+
+(with-eval-after-load 'treemacs
+  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
 (use-package treemacs-evil
 	:after (treemacs evil)
@@ -352,7 +357,7 @@
 	(setq org-log-into-drawer t)
 
 	(setq org-agenda-files
-	'("~/workspace/OrgFilesorgfiles/tasks.org"))
+	'("~/workspace/orgfiles/tasks.org"))
 
 	(setq org-todo-keywords
 		'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
@@ -487,16 +492,3 @@
 (add-hook 'c-mode-hook 'lsp-deferred)
 (add-hook 'cuda-mode-hook 'lsp-deferred)
 (add-hook 'objc-mode-hook 'lsp-deferred)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-	 '(all-the-icons-dired org-bullets use-package treemacs-projectile treemacs-icons-dired treemacs-evil lsp-ui lsp-ivy flycheck editorconfig doom-themes doom-modeline dashboard counsel-projectile company-native-complete company-box centaur-tabs bug-hunter)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
