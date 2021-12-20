@@ -97,35 +97,37 @@
 	:config
 	(editorconfig-mode 1))
 
-;; Atalhos
-;(global-set-key (kbd "M-<tab>") 'other-window)
-;(global-set-key (kbd "M-j") 'enlarge-window)
-;(global-set-key (kbd "M-k") 'shrink-window)
-;(global-set-key (kbd "M-l") 'enlarge-window-horizontally)
-;(global-set-key (kbd "M-h") 'shrink-window-horizontally)
+(use-package move-text)
 
-;(global-set-key (kbd "C-f") 'swiper-isearch)
-(define-key evil-motion-state-map " " nil)
+(use-package helm
+  :preface (require 'helm-config)
+  :init
+    (setq helm-split-window-in-side-p t
+          helm-move-to-line-cycle-in-source t)
+  :config 
+    (helm-mode 1) ;; Most of Emacs prompts become helm-enabled
+    (helm-autoresize-mode 1) ;; Helm resizes according to the number of candidates
+    (global-set-key (kbd "M-b") 'helm-buffers-list) ;; List buffers ( Emacs way )
+    (define-key evil-ex-map "b" 'helm-buffers-list) ;; List buffers ( Vim way )
+    (global-set-key (kbd "C-x r b") 'helm-bookmarks) ;; Bookmarks menu
+    ;(global-set-key (kbd "C-x C-f") 'helm-find-file) ;; Finding files with Helm
+    (global-set-key (kbd "M-c") 'helm-calcul-expression) ;; Use Helm for calculations
+    (global-set-key (kbd "C-s") 'helm-occur)  ;; Replaces the default isearch keybinding
+    (global-set-key (kbd "C-h a") 'helm-apropos)  ;; Helmized apropos interface
+    (global-set-key (kbd "M-x") 'helm-M-x)  ;; Improved M-x menu
+    (global-set-key (kbd "M-y") 'helm-show-kill-ring)  ;; Show kill ring, pick something to paste
+  :ensure t)
+(use-package helm-projectile)
 
-(define-key evil-normal-state-map (kbd "C-f") 'swiper-isearch)
-(define-key evil-normal-state-map (kbd "C-r") 'swiper-isearch)
-(define-key evil-normal-state-map (kbd "C-b") 'treemacs)
-(define-key evil-normal-state-map (kbd "C-j") 'scroll-down)
-(define-key evil-normal-state-map (kbd "C-k") 'scroll-up)
-(define-key evil-normal-state-map (kbd "C-r") 'replace-regexp)
+(use-package yasnippet)
+(use-package auto-yasnippet)
+(setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+(yas-global-mode 1)
 
-(define-key evil-normal-state-map (kbd "SPC SPC") 'find-file)
+(use-package fixmee)
+(global-fixmee-mode 1)
 
-(define-key evil-normal-state-map (kbd "M-l") 'centaur-tabs-forward)
-(define-key evil-normal-state-map (kbd "M-h") 'centaur-tabs-backward)
-;; (define-key evil-visual-state-map (kbd "<tab>") 'indent-rigidly)
-
-(global-set-key (kbd "<escape>")      'keyboard-escape-quit)
-
-;(global-set-key (kbd "C-h") 'evil-window-split)
-;(global-set-key (kbd "C-v") 'evil-window-vsplit)
-
-(global-set-key [C-tab] 'counsel-switch-buffer)
+(show-paren-mode 1)
 
 (setq ns-alternate-modifier 'meta)
 (setq ns-right-alternate-modifier 'none)
@@ -186,11 +188,11 @@
 	:if (display-graphic-p)
 	:hook (dired-mode . all-the-icons-dired-mode))
 
-(set-face-attribute 'default nil :font "Fira Code" :height 150)
+(set-face-attribute 'default nil :font "Fira Code" :height 120)
 ;; Set the fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 150)
+(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 120)
 ;; Set the variable pitch face
-(set-face-attribute 'variable-pitch nil :font "Cantarell" :height 150 :weight 'regular)
+(set-face-attribute 'variable-pitch nil :font "Cantarell" :height 120 :weight 'regular)
 
 (use-package dashboard
 	:ensure t
@@ -316,6 +318,18 @@
 (use-package treemacs-icons-dired
 	:hook (dired-mode . treemacs-icons-dired-enable-once)
 	:ensure t)
+
+(use-package hl-todo
+  :hook (prog-mode . hl-todo-mode)
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+        hl-todo-keyword-faces
+        `(("TODO"       warning bold)
+          ("FIXME"      error bold)
+          ("HACK"       font-lock-constant-face bold)
+          ("REVIEW"     font-lock-keyword-face bold)
+          ("NOTE"       success bold)
+          ("DEPRECATED" font-lock-doc-face bold))))
 
 (defun efs/org-mode-setup ()
 	;(org-indent-mode)
@@ -464,6 +478,10 @@
 
 (use-package lsp-mode
 	:ensure t
+	:hook (lsp-mode . (lambda ()
+		                   (let ((lsp-keymap-prexix "C-c l")))))
+	:config
+	(define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
 	:commands lsp lsp-deferred)
 
 (use-package lsp-ui
@@ -488,7 +506,64 @@
 		;; (setq lsp-clients-clangd-executable "clangd-12") 
 ;;		(lsp))
 
+
 (add-hook 'c++-mode-hook 'lsp-deferred)
 (add-hook 'c-mode-hook 'lsp-deferred)
 (add-hook 'cuda-mode-hook 'lsp-deferred)
 (add-hook 'objc-mode-hook 'lsp-deferred)
+
+(use-package term
+  :config
+  (setq explicit-shell-file-name "bash")
+  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>| *"))
+
+(global-set-key (kbd "M-<tab>") 'other-window)
+
+(define-key evil-motion-state-map " " nil)
+
+(define-key evil-normal-state-map (kbd "C-r") 'replace-regexp)
+
+;; Double spaces for finding files
+(define-key evil-normal-state-map (kbd "SPC SPC") 'helm-projectile-find-file)
+
+;; Quick buffer switching
+(define-key evil-normal-state-map (kbd "M-l") 'next-buffer)
+(define-key evil-normal-state-map (kbd "M-h") 'previous-buffer)
+(define-key term-mode-map (kbd "M-l") 'next-buffer)
+(define-key term-mode-map (kbd "M-h") 'previous-buffer)
+
+(define-key evil-normal-state-map (kbd "C-c u") 'uncomment-region)
+(define-key evil-insert-state-map (kbd "C-c u") 'uncomment-region)
+(define-key evil-normal-state-map (kbd "C-c c") 'comment-region)
+(define-key evil-insert-state-map (kbd "C-c c") 'comment-region)
+
+;; Move lines with M-j, M-k in normal and insert mode
+(define-key evil-normal-state-map (kbd "M-k") 'move-text-up)
+(define-key evil-normal-state-map (kbd "M-j") 'move-text-down)
+(define-key evil-insert-state-map (kbd "M-k") 'move-text-up)
+(define-key evil-insert-state-map (kbd "M-j") 'move-text-down)
+
+(define-key evil-insert-state-map (kbd "C-c h") 'evil-window-left)
+(define-key evil-insert-state-map (kbd "C-c j") 'evil-window-down)
+(define-key evil-insert-state-map (kbd "C-c k") 'evil-window-up)
+(define-key evil-insert-state-map (kbd "C-c l") 'evil-window-right)
+(define-key evil-normal-state-map (kbd "C-c h") 'evil-window-left)
+(define-key evil-normal-state-map (kbd "C-c j") 'evil-window-down)
+(define-key evil-normal-state-map (kbd "C-c k") 'evil-window-up)
+(define-key evil-normal-state-map (kbd "C-c l") 'evil-window-right)
+
+(define-key term-raw-map (kbd "C-c k") 'evil-window-up)
+(define-key term-raw-map (kbd "C-c j") 'evil-window-down)
+(define-key term-raw-map (kbd "C-c l") 'evil-window-right)
+(define-key term-raw-map (kbd "C-c h") 'evil-window-left)
+
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+(define-key evil-insert-state-map (kbd "M-b") 'helm-buffers-list)
+(define-key evil-normal-state-map (kbd "M-b") 'helm-buffers-list)
+
+(define-key evil-normal-state-map (kbd "t") 'term)
+
+(eval-after-load "shell"
+  '(define-key shell-mode-map (kbd "TAB") #'company-complete))
+(add-hook 'shell-mode-hook #'company-mode)
