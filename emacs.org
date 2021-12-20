@@ -159,12 +159,6 @@
 (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
 (yas-global-mode 1)
 #+end_src
-** Fixmee
-#+begin_src emacs-lisp
-(use-package fixmee)
-(global-fixmee-mode 1)
-
-#+end_src
 * Configuration
 ** Paren mode
 #+begin_src emacs-lisp

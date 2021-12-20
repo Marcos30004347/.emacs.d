@@ -124,9 +124,6 @@
 (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
 (yas-global-mode 1)
 
-(use-package fixmee)
-(global-fixmee-mode 1)
-
 (show-paren-mode 1)
 
 (setq ns-alternate-modifier 'meta)
