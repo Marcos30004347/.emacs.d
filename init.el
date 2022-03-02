@@ -124,6 +124,15 @@
 (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
 (yas-global-mode 1)
 
+(use-package ag
+	:ensure t)
+
+(setq ag-highlight-search t)
+(setq ag-reuse-window t)
+
+(use-package wgrep)
+(use-package wgrep-ag)
+
 (show-paren-mode 1)
 
 (setq ns-alternate-modifier 'meta)
@@ -136,10 +145,15 @@
 (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
 (setq indent-tabs-mode t)
 
+(global-visual-line-mode t)
+(setq-default word-wrap t)
+
 ;; Remove Welcome message
 (setq inhibit-startup-message t)
-;; Hilight on current line
-(global-hl-line-mode t)
+
+;; ;; Hilight on current line
+;; (global-hl-line-mode t)
+
 ;; Remove blinking cursor
 (blink-cursor-mode 0)
 ;; Remover tool bar
@@ -160,19 +174,23 @@
 	:custom ((doom-modeline-height 15)))
 
 ;; Setup doom-themes
-(use-package doom-themes
-	:ensure t
-	:config
-	(setq doom-themes-enable-bold t
-				doom-themes-enable-italic t)
+;; (use-package doom-themes
+;; 	:ensure t
+;; 	:config
+;; 	(setq doom-themes-enable-bold nil
+;; 				doom-themes-enable-italic nil)
 
-	(load-theme 'doom-one t)
+;; 	;;(load-theme 'doom-one t)
+;; 	(load-theme 'doom-dracula t)
 
-	(doom-themes-visual-bell-config)
-	(doom-themes-neotree-config)
-	(setq doom-themes-treemacs-theme "doom-atom")
-	(doom-themes-treemacs-config)
-	(doom-themes-org-config))
+;; 	(doom-themes-visual-bell-config)
+;; 	(doom-themes-neotree-config)
+;; 	;;(setq doom-themes-treemacs-theme "doom-gruvbox")
+;; 	(setq doom-themes-treemacs-theme "doom-one")
+;; 	(doom-themes-treemacs-config)
+;; 	(doom-themes-org-config))
+(use-package almost-mono-themes)
+(load-theme 'almost-mono-cream t)
 
 (use-package all-the-icons
 	:if (display-graphic-p)
@@ -185,9 +203,16 @@
 	:if (display-graphic-p)
 	:hook (dired-mode . all-the-icons-dired-mode))
 
-(set-face-attribute 'default nil :font "Fira Code" :height 120)
+;;(set-face-bold-p 'bold nil)
+
+;; (set-face-attribute 'default nil :font "Fixedsys Excelsior 3.01" :height 120 :weight 'normal :underline nil)
+(set-face-attribute 'default nil :font "IBM Plex Mono" :height 120)
+;; (set-face-attribute 'default nil :font "Source Code Pro" :height 120)
+;;(set-face-attribute 'default nil :font "Cutive Mono" :height 120)
+
 ;; Set the fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 120)
+(set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height 120)
+
 ;; Set the variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 120 :weight 'regular)
 
@@ -478,6 +503,8 @@
 	:hook (lsp-mode . (lambda ()
 		                   (let ((lsp-keymap-prexix "C-c l")))))
 	:config
+	(setq lsp-headerline-breadcrumb-enable nil)
+	(setq lsp-enable-links nil)
 	(define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
 	:commands lsp lsp-deferred)
 
@@ -509,6 +536,22 @@
 (add-hook 'cuda-mode-hook 'lsp-deferred)
 (add-hook 'objc-mode-hook 'lsp-deferred)
 
+(use-package cmake-mode
+  :ensure t
+  :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'")
+  :hook (cmake-mode . lsp-deferred))
+
+;;(use-package cmake-font-lock
+;;  :ensure t
+;;  :after cmake-mode
+;;  :config (cmake-font-lock-activate))
+
+(use-package vterm
+  :commands vterm
+	:config
+	(setq term-prompt-regexp "^[^#$%>\n]*[#$%>| *")
+)
+
 (use-package term
   :config
   (setq explicit-shell-file-name "bash")
@@ -516,51 +559,92 @@
 
 (global-set-key (kbd "M-<tab>") 'other-window)
 
-(define-key evil-motion-state-map " " nil)
+	(define-key evil-motion-state-map " " nil)
+	
+	(define-key evil-normal-state-map (kbd "C-r") 'replace-regexp)
+	(define-key evil-normal-state-map (kbd "C-S-R") 'ag-project-regexp)
+	
+	;; Double spaces for finding files
+	(define-key evil-normal-state-map (kbd "SPC SPC") 'helm-projectile-find-file)
+	
+	;; Quick buffer switching
+	(define-key evil-normal-state-map (kbd "M-l") 'next-buffer)
+	(define-key evil-normal-state-map (kbd "M-h") 'previous-buffer)
+	(define-key term-mode-map (kbd "M-l") 'next-buffer)
+	(define-key term-mode-map (kbd "M-h") 'previous-buffer)
+	
+	(define-key evil-normal-state-map (kbd "C-c c") 'uncomment-region)
+	(define-key evil-insert-state-map (kbd "C-c u") 'uncomment-region)
+	(define-key evil-normal-state-map (kbd "C-c c") 'comment-region)
+	(define-key evil-insert-state-map (kbd "C-c u") 'comment-region)
 
-(define-key evil-normal-state-map (kbd "C-r") 'replace-regexp)
+	;; Move lines with M-j, M-k in normal and insert mode
+	(define-key evil-normal-state-map (kbd "M-k") 'move-text-up)
+	(define-key evil-normal-state-map (kbd "M-j") 'move-text-down)
+	(define-key evil-insert-state-map (kbd "M-k") 'move-text-up)
+	(define-key evil-insert-state-map (kbd "M-j") 'move-text-down)
+	
 
-;; Double spaces for finding files
-(define-key evil-normal-state-map (kbd "SPC SPC") 'helm-projectile-find-file)
+	(define-key evil-normal-state-map (kbd "M-<up>") 'move-text-up)
+	(define-key evil-normal-state-map (kbd "M-<down>") 'move-text-down)
+	(define-key evil-insert-state-map (kbd "M-<up>") 'move-text-up)
+	(define-key evil-insert-state-map (kbd "M-<down>") 'move-text-down)
 
-;; Quick buffer switching
-(define-key evil-normal-state-map (kbd "M-l") 'next-buffer)
-(define-key evil-normal-state-map (kbd "M-h") 'previous-buffer)
-(define-key term-mode-map (kbd "M-l") 'next-buffer)
-(define-key term-mode-map (kbd "M-h") 'previous-buffer)
+	
+	(define-key evil-insert-state-map (kbd "C-c h") 'evil-window-left)
+	(define-key evil-insert-state-map (kbd "C-c j") 'evil-window-down)
+	(define-key evil-insert-state-map (kbd "C-c k") 'evil-window-up)
+	(define-key evil-insert-state-map (kbd "C-c l") 'evil-window-right)
+	(define-key evil-normal-state-map (kbd "C-c h") 'evil-window-left)
+	(define-key evil-normal-state-map (kbd "C-c j") 'evil-window-down)
+	(define-key evil-normal-state-map (kbd "C-c k") 'evil-window-up)
+	(define-key evil-normal-state-map (kbd "C-c l") 'evil-window-right)
 
-(define-key evil-normal-state-map (kbd "C-c u") 'uncomment-region)
-(define-key evil-insert-state-map (kbd "C-c u") 'uncomment-region)
-(define-key evil-normal-state-map (kbd "C-c c") 'comment-region)
-(define-key evil-insert-state-map (kbd "C-c c") 'comment-region)
+	(define-key term-raw-map (kbd "C-c k") 'evil-window-up)
+	(define-key term-raw-map (kbd "C-c j") 'evil-window-down)
+	(define-key term-raw-map (kbd "C-c l") 'evil-window-right)
+	(define-key term-raw-map (kbd "C-c h") 'evil-window-left)
 
-;; Move lines with M-j, M-k in normal and insert mode
-(define-key evil-normal-state-map (kbd "M-k") 'move-text-up)
-(define-key evil-normal-state-map (kbd "M-j") 'move-text-down)
-(define-key evil-insert-state-map (kbd "M-k") 'move-text-up)
-(define-key evil-insert-state-map (kbd "M-j") 'move-text-down)
+	(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-(define-key evil-insert-state-map (kbd "C-c h") 'evil-window-left)
-(define-key evil-insert-state-map (kbd "C-c j") 'evil-window-down)
-(define-key evil-insert-state-map (kbd "C-c k") 'evil-window-up)
-(define-key evil-insert-state-map (kbd "C-c l") 'evil-window-right)
-(define-key evil-normal-state-map (kbd "C-c h") 'evil-window-left)
-(define-key evil-normal-state-map (kbd "C-c j") 'evil-window-down)
-(define-key evil-normal-state-map (kbd "C-c k") 'evil-window-up)
-(define-key evil-normal-state-map (kbd "C-c l") 'evil-window-right)
+	(define-key evil-insert-state-map (kbd "M-b") 'helm-buffers-list)
+	(define-key evil-normal-state-map (kbd "M-b") 'helm-buffers-list)
 
-(define-key term-raw-map (kbd "C-c k") 'evil-window-up)
-(define-key term-raw-map (kbd "C-c j") 'evil-window-down)
-(define-key term-raw-map (kbd "C-c l") 'evil-window-right)
-(define-key term-raw-map (kbd "C-c h") 'evil-window-left)
+	(define-key evil-normal-state-map (kbd "t") 'term)
 
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+	(eval-after-load "shell"
+    '(define-key shell-mode-map (kbd "TAB") #'company-complete))
+	(add-hook 'shell-mode-hook #'company-mode)
 
-(define-key evil-insert-state-map (kbd "M-b") 'helm-buffers-list)
-(define-key evil-normal-state-map (kbd "M-b") 'helm-buffers-list)
 
-(define-key evil-normal-state-map (kbd "t") 'term)
+		
+(defvar my-double-key-timeout 0.25
+  "The number of seconds to wait for a second key press.")
 
-(eval-after-load "shell"
-  '(define-key shell-mode-map (kbd "TAB") #'company-complete))
-(add-hook 'shell-mode-hook #'company-mode)
+ (defun my-tab ()
+  "Move to the beginning of the current line on the first key stroke,
+and to the beginning of the buffer if there is a second key stroke
+within `my-double-key-timeout' seconds."
+  (interactive)
+  (let ((last-called (get this-command 'my-last-call-time)) )
+        (is-term (string= "term-mode" major-mode)))
+    (if (and is-term (term-in-char-mode))
+    (term-send-raw-string "\t")
+      (if (and (eq last-command this-command)
+           last-called
+           (<= (time-to-seconds (time-since last-called))
+           my-double-key-timeout))
+      (yas-expand) 
+
+            (if (sit-for my-double-key-timeout)
+             (complete-indent-fold)))
+
+    (put this-command 'my-last-call-time (current-time))))
+
+(defun complete-indent-fold()
+  (interactive)
+  (if (looking-at outline-regexp)
+      (if (equal major-mode 'org-mode) (org-cycle) (my-outline-cycle))
+    (if (looking-at "\\_>") (company-complete) (indent-for-tab-command))))
+
+(define-key term-mode-map (kbd "TAB") 'my-tab)

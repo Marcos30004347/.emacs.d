@@ -1,6 +1,7 @@
 emacs.org
 *~
 #*
+var/
 auto-save-list/
 elpa/
 *.org
@@ -8,5 +9,10 @@ elpa/
 recentf
 .cache/
 .lsp-session-v1
-
+.#session.*
+session.*
+recentf*
+projectile.cache
+projectile-bookmarks.eld
+.lsp-session-v1
 !emacs.org
