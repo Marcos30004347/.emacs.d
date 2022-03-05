@@ -189,6 +189,14 @@
 	 #+RESULTS:
 
 * Configuration
+** Temp files
+	 #+begin_src emacs-lisp
+		 (setq auto-save-file-name-transforms
+					 `((".*" ,(concat user-emacs-directory "auto-save/") t)))
+		 (setq backup-directory-alist
+					 `(("." . ,(expand-file-name
+											(concat user-emacs-directory "backups")))))
+	 #+end_src
 ** Paren mode
 	 #+begin_src emacs-lisp
 		 (show-paren-mode 1)
@@ -775,24 +783,24 @@
 
 		(defvar my-double-key-timeout 0.25
 			"The number of seconds to wait for a second key press.")
- (defun my-tab ()
-  "Move to the beginning of the current line on the first key stroke,
-and to the beginning of the buffer if there is a second key stroke
-within `my-double-key-timeout' seconds."
-  (interactive)
-  (let ((last-called (get this-command 'my-last-call-time)) )
-        (is-term (string= "term-mode" major-mode)))
-    (if (and is-term (term-in-char-mode))
-    (term-send-raw-string "\t")
-      (if (and (eq last-command this-command)
-           last-called
-           (<= time-to-seconds (time-since last-called) my-double-key-timeout))
-      (yas-expand) 
+		(defun my-tab ()
+			"Move to the beginning of the current line on the first key stroke,
+		and to the beginning of the buffer if there is a second key stroke
+		within `my-double-key-timeout' seconds."
+			(interactive)
+			(let ((last-called (get this-command 'my-last-call-time)) )
+				(is-term (string= "term-mode" major-mode)))
+			(if (and is-term (term-in-char-mode))
+					(term-send-raw-string "\t")
+				(if (and (eq last-command this-command)
+								 last-called
+								 (<= time-to-seconds (time-since last-called) my-double-key-timeout))
+						(yas-expand) 
 
-            (if (sit-for my-double-key-timeout)
-             (complete-indent-fold)))
+					(if (sit-for my-double-key-timeout)
+							(complete-indent-fold)))
 
-    (put this-command 'my-last-call-time (current-time))))
+				(put this-command 'my-last-call-time (current-time))))
 
 		(defun complete-indent-fold()
 			(interactive)

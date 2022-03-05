@@ -145,6 +145,12 @@
 (use-package wgrep-ag
 	:ensure t)
 
+(setq auto-save-file-name-transforms
+			`((".*" ,(concat user-emacs-directory "auto-save/") t)))
+(setq backup-directory-alist
+			`(("." . ,(expand-file-name
+								 (concat user-emacs-directory "backups")))))
+
 (show-paren-mode 1)
 
 (setq ns-alternate-modifier 'meta)
@@ -580,103 +586,90 @@
 
 (global-set-key (kbd "M-<tab>") 'other-window)
 
-		(define-key evil-motion-state-map " " nil)
+(define-key evil-motion-state-map " " nil)
 
-		(define-key evil-normal-state-map (kbd "C-r") 'replace-regexp)
-		(define-key evil-normal-state-map (kbd "C-S-R") 'ag-project-regexp)
+(define-key evil-normal-state-map (kbd "C-r") 'replace-regexp)
+(define-key evil-normal-state-map (kbd "C-S-R") 'ag-project-regexp)
 
-		;; Double spaces for finding files
-		(define-key evil-normal-state-map (kbd "SPC SPC") 'helm-projectile-find-file)
+;; Double spaces for finding files
+(define-key evil-normal-state-map (kbd "SPC SPC") 'helm-projectile-find-file)
 
-		;; Quick buffer switching
-		(define-key evil-normal-state-map (kbd "M-l") 'next-buffer)
-		(define-key evil-normal-state-map (kbd "M-h") 'previous-buffer)
-		(define-key term-mode-map (kbd "M-l") 'next-buffer)
-		(define-key term-mode-map (kbd "M-h") 'previous-buffer)
+;; Quick buffer switching
+(define-key evil-normal-state-map (kbd "M-l") 'next-buffer)
+(define-key evil-normal-state-map (kbd "M-h") 'previous-buffer)
+(define-key term-mode-map (kbd "M-l") 'next-buffer)
+(define-key term-mode-map (kbd "M-h") 'previous-buffer)
 
-		(define-key evil-normal-state-map (kbd "C-c c") 'uncomment-region)
-		(define-key evil-insert-state-map (kbd "C-c u") 'uncomment-region)
-		(define-key evil-normal-state-map (kbd "C-c c") 'comment-region)
-		(define-key evil-insert-state-map (kbd "C-c u") 'comment-region)
+(define-key evil-normal-state-map (kbd "C-c c") 'uncomment-region)
+(define-key evil-insert-state-map (kbd "C-c u") 'uncomment-region)
+(define-key evil-normal-state-map (kbd "C-c c") 'comment-region)
+(define-key evil-insert-state-map (kbd "C-c u") 'comment-region)
 
-		;; Move lines with M-j, M-k in normal and insert mode
-		(define-key evil-normal-state-map (kbd "M-k") 'move-text-up)
-		(define-key evil-normal-state-map (kbd "M-j") 'move-text-down)
-		(define-key evil-insert-state-map (kbd "M-k") 'move-text-up)
-		(define-key evil-insert-state-map (kbd "M-j") 'move-text-down)
-
-
-		(define-key evil-normal-state-map (kbd "M-<up>") 'move-text-up)
-		(define-key evil-normal-state-map (kbd "M-<down>") 'move-text-down)
-		(define-key evil-insert-state-map (kbd "M-<up>") 'move-text-up)
-		(define-key evil-insert-state-map (kbd "M-<down>") 'move-text-down)
+;; Move lines with M-j, M-k in normal and insert mode
+(define-key evil-normal-state-map (kbd "M-k") 'move-text-up)
+(define-key evil-normal-state-map (kbd "M-j") 'move-text-down)
+(define-key evil-insert-state-map (kbd "M-k") 'move-text-up)
+(define-key evil-insert-state-map (kbd "M-j") 'move-text-down)
 
 
-		(define-key evil-insert-state-map (kbd "C-c h") 'evil-window-left)
-		(define-key evil-insert-state-map (kbd "C-c j") 'evil-window-down)
-		(define-key evil-insert-state-map (kbd "C-c k") 'evil-window-up)
-		(define-key evil-insert-state-map (kbd "C-c l") 'evil-window-right)
-		(define-key evil-normal-state-map (kbd "C-c h") 'evil-window-left)
-		(define-key evil-normal-state-map (kbd "C-c j") 'evil-window-down)
-		(define-key evil-normal-state-map (kbd "C-c k") 'evil-window-up)
-		(define-key evil-normal-state-map (kbd "C-c l") 'evil-window-right)
-
-		(define-key term-raw-map (kbd "C-c k") 'evil-window-up)
-		(define-key term-raw-map (kbd "C-c j") 'evil-window-down)
-		(define-key term-raw-map (kbd "C-c l") 'evil-window-right)
-		(define-key term-raw-map (kbd "C-c h") 'evil-window-left)
-
-		(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-		(define-key evil-insert-state-map (kbd "M-b") 'helm-buffers-list)
-		(define-key evil-normal-state-map (kbd "M-b") 'helm-buffers-list)
-
-		(define-key evil-normal-state-map (kbd "t") 'term)
-
-		(eval-after-load "shell"
-			'(define-key shell-mode-map (kbd "TAB") #'company-complete))
-		(add-hook 'shell-mode-hook #'company-mode)
+(define-key evil-normal-state-map (kbd "M-<up>") 'move-text-up)
+(define-key evil-normal-state-map (kbd "M-<down>") 'move-text-down)
+(define-key evil-insert-state-map (kbd "M-<up>") 'move-text-up)
+(define-key evil-insert-state-map (kbd "M-<down>") 'move-text-down)
 
 
+(define-key evil-insert-state-map (kbd "C-c h") 'evil-window-left)
+(define-key evil-insert-state-map (kbd "C-c j") 'evil-window-down)
+(define-key evil-insert-state-map (kbd "C-c k") 'evil-window-up)
+(define-key evil-insert-state-map (kbd "C-c l") 'evil-window-right)
+(define-key evil-normal-state-map (kbd "C-c h") 'evil-window-left)
+(define-key evil-normal-state-map (kbd "C-c j") 'evil-window-down)
+(define-key evil-normal-state-map (kbd "C-c k") 'evil-window-up)
+(define-key evil-normal-state-map (kbd "C-c l") 'evil-window-right)
 
-		(defvar my-double-key-timeout 0.25
-			"The number of seconds to wait for a second key press.")
- (defun my-tab ()
-  "Move to the beginning of the current line on the first key stroke,
+(define-key term-raw-map (kbd "C-c k") 'evil-window-up)
+(define-key term-raw-map (kbd "C-c j") 'evil-window-down)
+(define-key term-raw-map (kbd "C-c l") 'evil-window-right)
+(define-key term-raw-map (kbd "C-c h") 'evil-window-left)
+
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+(define-key evil-insert-state-map (kbd "M-b") 'helm-buffers-list)
+(define-key evil-normal-state-map (kbd "M-b") 'helm-buffers-list)
+
+(define-key evil-normal-state-map (kbd "t") 'term)
+
+(eval-after-load "shell"
+	'(define-key shell-mode-map (kbd "TAB") #'company-complete))
+(add-hook 'shell-mode-hook #'company-mode)
+
+
+
+(defvar my-double-key-timeout 0.25
+	"The number of seconds to wait for a second key press.")
+(defun my-tab ()
+	"Move to the beginning of the current line on the first key stroke,
 and to the beginning of the buffer if there is a second key stroke
 within `my-double-key-timeout' seconds."
-  (interactive)
-  (let ((last-called (get this-command 'my-last-call-time)) )
-        (is-term (string= "term-mode" major-mode)))
-    (if (and is-term (term-in-char-mode))
-    (term-send-raw-string "\t")
-      (if (and (eq last-command this-command)
-           last-called
-           (<= time-to-seconds (time-since last-called) my-double-key-timeout))
-      (yas-expand) 
+	(interactive)
+	(let ((last-called (get this-command 'my-last-call-time)) )
+		(is-term (string= "term-mode" major-mode)))
+	(if (and is-term (term-in-char-mode))
+			(term-send-raw-string "\t")
+		(if (and (eq last-command this-command)
+						 last-called
+						 (<= time-to-seconds (time-since last-called) my-double-key-timeout))
+				(yas-expand) 
 
-            (if (sit-for my-double-key-timeout)
-             (complete-indent-fold)))
+			(if (sit-for my-double-key-timeout)
+					(complete-indent-fold)))
 
-    (put this-command 'my-last-call-time (current-time))))
+		(put this-command 'my-last-call-time (current-time))))
 
-		(defun complete-indent-fold()
-			(interactive)
-			(if (looking-at outline-regexp)
-					(if (equal major-mode 'org-mode) (org-cycle) (my-outline-cycle))
-				(if (looking-at "\\_>") (company-complete) (indent-for-tab-command))))
+(defun complete-indent-fold()
+	(interactive)
+	(if (looking-at outline-regexp)
+			(if (equal major-mode 'org-mode) (org-cycle) (my-outline-cycle))
+		(if (looking-at "\\_>") (company-complete) (indent-for-tab-command))))
 
-		(define-key term-mode-map (kbd "TAB") 'my-tab)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-	 '(company-box wgrep-ag use-package treemacs-projectile treemacs-icons-dired treemacs-evil move-text lsp-ui lsp-ivy hl-todo helm-projectile editorconfig doom-modeline dashboard counsel-projectile company cmake-mode auto-yasnippet almost-mono-themes all-the-icons-dired ag)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(define-key term-mode-map (kbd "TAB") 'my-tab)
