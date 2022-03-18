@@ -145,6 +145,20 @@
 (use-package wgrep-ag
 	:ensure t)
 
+(load  (expand-file-name "gendoxy.el" user-emacs-directory))
+
+;;(use-package good-scroll
+;;  :ensure t)
+
+;;(good-scroll-mode 1)
+
+(use-package fixmee
+  :ensure t)
+(use-package button-lock
+  :ensure t)
+
+(global-fixmee-mode 1)
+
 (setq auto-save-file-name-transforms
 			`((".*" ,(concat user-emacs-directory "auto-save/") t)))
 (setq backup-directory-alist
@@ -213,7 +227,12 @@
 ;; 	(doom-themes-org-config))
 (use-package almost-mono-themes
 	:ensure t)
-(load-theme 'almost-mono-cream t)
+;;(load-theme 'almost-mono-cream t)
+(use-package gruvbox-theme
+	:ensure t)
+	(use-package spacemacs-theme
+	:defer t
+	:init (load-theme 'spacemacs-dark t))
 
 (use-package all-the-icons
 	:ensure t
@@ -525,38 +544,40 @@
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
 
-(use-package lsp-mode
+(setq lsp-log-io nil) ;; Don't log everything = speed
+(setq lsp-keymap-prefix "C-c l")
+(setq lsp-restart 'auto-restart)
+(setq lsp-ui-sideline-show-diagnostics t)
+(setq lsp-ui-sideline-show-hover t)
+(setq lsp-ui-sideline-show-code-actions t)
+
+		 (use-package lsp-mode
+			 :ensure t
+			 :hook (
+			 (web-mode . lsp-deferred)
+			   (lsp-mode . (lambda ()
+			   (let ((lsp-keymap-prexix "C-c l")))))
+			 )
+			 :config
+			 (setq lsp-headerline-breadcrumb-enable nil)
+			 (setq lsp-enable-links nil)
+			 (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+			 :commands lsp lsp-deferred)
+
+		 (use-package lsp-ui
+			 :ensure t
+			 :hook (lsp-mode . lsp-ui-mode)
+			 :custom
+			 (lsp-ui-doc-position 'bottom))
+
+		 (use-package lsp-ivy
+			 :ensure t)
+
+(use-package flycheck
 	:ensure t
-	:hook (lsp-mode . (lambda ()
-											(let ((lsp-keymap-prexix "C-c l")))))
-	:config
-	(setq lsp-headerline-breadcrumb-enable nil)
-	(setq lsp-enable-links nil)
-	(define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-	:commands lsp lsp-deferred)
-
-(use-package lsp-ui
-	:ensure t
-	:hook (lsp-mode . lsp-ui-mode)
-	:custom
-	(lsp-ui-doc-position 'bottom))
-
-(use-package lsp-ivy
-	:ensure t)
-
-;	(use-package flycheck
-;		:ensure t
-;		:init
-;		(global-flycheck-mode)
-;		(setq flycheck-clang-language-standard "c++11"))
-
-;; (defun setup-cpp-lang ()																										 ;;
-;; (setq lsp-clangd-binary-path "/usr/local/Cellar/llvm/13.0.0_1/bin/clangd")	 ;;
-;;  (setq flycheck-clang-language-standard "c++11")														 ;;
-;;  (setq lsp-clangd-executable "clangd-12")																	 ;;
-;;  (setq lsp-clients-clangd-executable "clangd-12") 													 ;;
-;; 	 (lsp))																																		 ;;
-
+	:init
+	(global-flycheck-mode))
+																					;		(setq flycheck-clang-language-standard "c++11"))
 
 (add-hook 'c++-mode-hook 'lsp-deferred)
 (add-hook 'c-mode-hook 'lsp-deferred)
@@ -568,10 +589,43 @@
 	:mode ("CMakeLists\\.txt\\'" "\\.cmake\\'")
 	:hook (cmake-mode . lsp-deferred))
 
-;;(use-package cmake-font-lock
-;;  :ensure t
-;;  :after cmake-mode
-;;  :config (cmake-font-lock-activate))
+(use-package json-mode
+			 :ensure t)
+
+		 (use-package rjsx-mode
+			 :ensure t
+			  :mode (("\\.js\\'" . rjsx-mode)
+		  	("\\.jsx\\'" .  rjsx-mode)
+		  	("\\.ts\\'" . rjsx-mode)
+		  	("\\.tsx\\'" . rjsx-mode)
+		 	  ("\\.html\\'" . rjsx-modee)))
+
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  ;; (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1))
+
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+
+;; formats the buffer before saving
+(add-hook 'before-save-hook 'tide-format-before-save)
+
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+
+(use-package tide
+  :ensure t
+	:after (rjsx-mode company flycheck)
+	:hook (rjsx-mode . setup-tide-mode))
+
+(use-package prettier-js
+  :ensure t
+	:after (rjsx-mode)
+  :hook (rjsx-mode . prettier-js-mode))
 
 (use-package vterm
 	:commands vterm
