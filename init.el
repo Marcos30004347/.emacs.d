@@ -159,6 +159,13 @@
 
 (global-fixmee-mode 1)
 
+(use-package highlight-indent-guides
+  :ensure t)
+
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+
+(setq highlight-indent-guides-method 'bitmap)
+
 (setq auto-save-file-name-transforms
 			`((".*" ,(concat user-emacs-directory "auto-save/") t)))
 (setq backup-directory-alist
@@ -210,29 +217,29 @@
 	:custom ((doom-modeline-height 15)))
 
 ;; Setup doom-themes
-;; (use-package doom-themes
-;; 	:ensure t
-;; 	:config
-;; 	(setq doom-themes-enable-bold nil
-;; 				doom-themes-enable-italic nil)
+(use-package doom-themes
+	:ensure t
+	:config
+	;; (setq doom-themes-enable-bold nil
+	;; 			doom-themes-enable-italic nil)
 
-;; 	;;(load-theme 'doom-one t)
-;; 	(load-theme 'doom-dracula t)
+	(load-theme 'gruvbox-dark-medium t)
+	(load-theme 'gruvbox-dark-medium t)
 
-;; 	(doom-themes-visual-bell-config)
-;; 	(doom-themes-neotree-config)
-;; 	;;(setq doom-themes-treemacs-theme "doom-gruvbox")
-;; 	(setq doom-themes-treemacs-theme "doom-one")
-;; 	(doom-themes-treemacs-config)
-;; 	(doom-themes-org-config))
+	(doom-themes-visual-bell-config)
+	(doom-themes-neotree-config)
+	;;(setq doom-themes-treemacs-theme "doom-gruvbox")
+	(setq doom-themes-treemacs-theme "gruvbox-dark-medium")
+	(doom-themes-treemacs-config)
+	(doom-themes-org-config))
 (use-package almost-mono-themes
 	:ensure t)
-;;(load-theme 'almost-mono-cream t)
-(use-package gruvbox-theme
-	:ensure t)
-	(use-package spacemacs-theme
-	:defer t
-	:init (load-theme 'spacemacs-dark t))
+;; (load-theme 'almost-mono-cream t)
+;; (use-package gruvbox-theme
+;; 	:ensure t)
+;; 	(use-package spacemacs-theme
+;; 	:defer t
+;; 	:init (load-theme 'spacemacs-dark t))
 
 (use-package all-the-icons
 	:ensure t
@@ -249,7 +256,7 @@
 
 ;;(set-face-bold-p 'bold nil)
 
-;; (set-face-attribute 'default nil :font "Fixedsys Excelsior 3.01" :height 120 :weight 'normal :underline nil)
+;;(set-face-attribute 'default nil :font "Fixedsys Excelsior 3.01" :height 120 :weight 'normal :underline nil)
 (set-face-attribute 'default nil :font "IBM Plex Mono" :height 120)
 ;; (set-face-attribute 'default nil :font "Source Code Pro" :height 120)
 ;;(set-face-attribute 'default nil :font "Cutive Mono" :height 120)
@@ -276,18 +283,6 @@
 													(agenda . 5)
 													(registers . 5)))	
 	(dashboard-setup-startup-hook))
-
-;	(use-package centaur-tabs
-;		:demand
-;		:config
-;		(centaur-tabs-mode t)
-;		:bind
-;		("C-p" . centaur-tabs-backward)
-;		("C-n" . centaur-tabs-forward))
-;	(setq centaur-tabs-style "rounded")
-;	(setq centaur-tabs-set-icons t)
-;	(setq centaur-tabs-set-modified-marker t)
-;	(setq centaur-tabs-modified-marker "*")
 
 (use-package treemacs
 	:ensure t
@@ -560,6 +555,7 @@
 			 )
 			 :config
 			 (setq lsp-headerline-breadcrumb-enable nil)
+			 (setq lsp-enable-on-type-formatting nil)
 			 (setq lsp-enable-links nil)
 			 (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
 			 :commands lsp lsp-deferred)
@@ -577,7 +573,6 @@
 	:ensure t
 	:init
 	(global-flycheck-mode))
-																					;		(setq flycheck-clang-language-standard "c++11"))
 
 (add-hook 'c++-mode-hook 'lsp-deferred)
 (add-hook 'c-mode-hook 'lsp-deferred)
@@ -589,86 +584,25 @@
 	:mode ("CMakeLists\\.txt\\'" "\\.cmake\\'")
 	:hook (cmake-mode . lsp-deferred))
 
-(use-package exec-path-from-shell
-						:ensure t)
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
 
-					(use-package json-mode
-						:ensure t
-						:mode (("\\.json\\'" . json-mode)))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . typescript-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . typescript-mode))
+(add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
 
-					(use-package js2-mode
-						:ensure t
-						:mode (("\\.js\\'" . js2-mode)))
+(add-hook 'typescript-mode-hook 'lsp-deferred)
+(add-hook 'json-mode-hook 'lsp-deferred)
 
-					(use-package web-mode
-						:ensure t
-						:mode (("\\.jsx\\'" . js2-mode)))
+(add-to-list 'auto-mode-alist '("\\.sh\\'" . sh-mode))
+(add-hook 'sh-mode-hook 'lsp-deferred)
 
-						;; (defun setup-tide-mode ()
-						;; 	(interactive)
-						;; 	(tide-setup)
-						;; 	(flycheck-mode +1)
-						;; 	(setq flycheck-check-syntax-automatically '(save mode-enabled))
-						;; 	(tide-hl-identifier-mode +1)
-						;; 	(company-mode +1))
+(use-package yaml-mode 
+	:ensure t)
 
-						;; (setq company-tooltip-align-annotations t)
-
-						;; (add-hook 'before-save-hook 'tide-format-before-save)
-
-						;; (add-hook 'js2-mode-hook #'setup-tide-mode)
-						;; (add-hook 'web-mode-hook #'setup-tide-mode)
-
-						;; ;; (use-package tide
-						;; 	 :ensure t
-						;; 	 :after (js2-mode company flycheck)
-						;; 	 :hook (js2-mode . setup-tide-mode))
-
-						(use-package prettier-js
-							:ensure t
-							:after (js2-mode)
-							:hook (js2-mode . prettier-js-mode))
-
-(flycheck-add-mode 'javascript-eslint 'web-mode)
-(flycheck-add-mode 'javascript-eslint 'js2-mode)
-
-;; https://github.com/purcell/exec-path-from-shell
-;; only need exec-path-from-shell on OSX
-;; this hopefully sets up path and other vars better
-(when (memq window-system '(mac ns))
-(exec-path-from-shell-initialize))
-
-
-;; use local eslint from node_modules before global
-;; http://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable
-(defun my/use-eslint-from-node-modules ()
-	(let* ((root (locate-dominating-file
-								(or (buffer-file-name) default-directory)
-								"node_modules"))
-				 (eslint (and root
-											(expand-file-name "node_modules/eslint/bin/eslint.js"
-																				root))))
-		(when (and eslint (file-executable-p eslint))
-			(setq-local flycheck-javascript-eslint-executable eslint))))
-(add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
-
-
-(defun my-web-mode-hook ()
-	"Hooks for Web mode. Adjust indents"
-	;;; http://web-mode.org/
-	(setq web-mode-markup-indent-offset 2)
-	(setq web-mode-css-indent-offset 2)
-	(setq web-mode-code-indent-offset 2))
-(add-hook 'web-mode-hook  'my-web-mode-hook)
-
-
-;; for better jsx syntax-highlighting in web-mode
-;; - courtesy of Patrick @halbtuerke
-(defadvice web-mode-highlight-part (around tweak-jsx activate)
-	(if (equal web-mode-content-type "jsx")
-		(let ((web-mode-enable-part-face nil))
-			ad-do-it)
-		ad-do-it))
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
+(add-hook 'yaml-mode-hook 'lsp-deferred)
 
 (use-package vterm
 	:commands vterm
@@ -684,7 +618,6 @@
 (global-set-key (kbd "M-<tab>") 'other-window)
 
 (define-key evil-motion-state-map " " nil)
-
 (define-key evil-normal-state-map (kbd "C-r") 'replace-regexp)
 (define-key evil-normal-state-map (kbd "C-S-R") 'ag-project-regexp)
 
@@ -735,38 +668,3 @@
 (define-key evil-normal-state-map (kbd "M-b") 'helm-buffers-list)
 
 (define-key evil-normal-state-map (kbd "t") 'term)
-
-(eval-after-load "shell"
-	'(define-key shell-mode-map (kbd "TAB") #'company-complete))
-(add-hook 'shell-mode-hook #'company-mode)
-
-
-
-(defvar my-double-key-timeout 0.25
-	"The number of seconds to wait for a second key press.")
-(defun my-tab ()
-	"Move to the beginning of the current line on the first key stroke,
-and to the beginning of the buffer if there is a second key stroke
-within `my-double-key-timeout' seconds."
-	(interactive)
-	(let ((last-called (get this-command 'my-last-call-time)) )
-		(is-term (string= "term-mode" major-mode)))
-	(if (and is-term (term-in-char-mode))
-			(term-send-raw-string "\t")
-		(if (and (eq last-command this-command)
-						 last-called
-						 (<= time-to-seconds (time-since last-called) my-double-key-timeout))
-				(yas-expand) 
-
-			(if (sit-for my-double-key-timeout)
-					(complete-indent-fold)))
-
-		(put this-command 'my-last-call-time (current-time))))
-
-(defun complete-indent-fold()
-	(interactive)
-	(if (looking-at outline-regexp)
-			(if (equal major-mode 'org-mode) (org-cycle) (my-outline-cycle))
-		(if (looking-at "\\_>") (company-complete) (indent-for-tab-command))))
-
-(define-key term-mode-map (kbd "TAB") 'my-tab)
