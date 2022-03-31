@@ -190,36 +190,36 @@
 
 ** GenDoxy
 	 #+begin_src emacs-lisp
-(load  (expand-file-name "gendoxy.el" user-emacs-directory))
+		 (load  (expand-file-name "gendoxy.el" user-emacs-directory))
 	 #+end_src
 ** Good-Scroll
 	 #+begin_src emacs-lisp
-;;(use-package good-scroll
-;;  :ensure t)
+		 ;;(use-package good-scroll
+		 ;;  :ensure t)
 
-;;(good-scroll-mode 1)
+		 ;;(good-scroll-mode 1)
 
 	 #+end_src
 
 ** Fixmee
 	 #+begin_src emacs-lisp
-(use-package fixmee
-  :ensure t)
-(use-package button-lock
-  :ensure t)
+		 (use-package fixmee
+			 :ensure t)
+		 (use-package button-lock
+			 :ensure t)
 
-(global-fixmee-mode 1)
+		 (global-fixmee-mode 1)
 
 	 #+end_src
 
 ** Highlight-Indent-Guides
 	 #+begin_src emacs-lisp
-(use-package highlight-indent-guides
-  :ensure t)
+		 (use-package highlight-indent-guides
+			 :ensure t)
 
-(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+		 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 
-(setq highlight-indent-guides-method 'bitmap)
+		 (setq highlight-indent-guides-method 'bitmap)
 
 	 #+end_src
 * Configuration
@@ -246,9 +246,9 @@
 
 ** Tab width
 	 #+begin_src emacs-lisp
-(setq-default tab-width 2)
-(define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
-(setq indent-tabs-mode t)
+		 (setq-default tab-width 2)
+		 (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
+		 (setq indent-tabs-mode t)
 	 #+end_src
 ** Visual line mode
 	 #+begin_src emacs-lisp
@@ -296,6 +296,7 @@
 ** Theme
 	 #+begin_src emacs-lisp
 		 ;; Setup doom-themes
+		 (use-package gruvbox-theme :ensure t)
 		 (use-package doom-themes
 			 :ensure t
 			 :config
@@ -662,20 +663,20 @@
 * Development
 ** Language server
 	 #+begin_src emacs-lisp
-(setq lsp-log-io nil) ;; Don't log everything = speed
-(setq lsp-keymap-prefix "C-c l")
-(setq lsp-restart 'auto-restart)
-(setq lsp-ui-sideline-show-diagnostics t)
-(setq lsp-ui-sideline-show-hover t)
-(setq lsp-ui-sideline-show-code-actions t)
+		 (setq lsp-log-io nil) ;; Don't log everything = speed
+		 (setq lsp-keymap-prefix "C-c l")
+		 (setq lsp-restart 'auto-restart)
+		 (setq lsp-ui-sideline-show-diagnostics t)
+		 (setq lsp-ui-sideline-show-hover t)
+		 (setq lsp-ui-sideline-show-code-actions t)
 
 		 (use-package lsp-mode
 			 :ensure t
 			 :hook (
-			 (web-mode . lsp-deferred)
-			   (lsp-mode . (lambda ()
-			   (let ((lsp-keymap-prexix "C-c l")))))
-			 )
+							(web-mode . lsp-deferred)
+							(lsp-mode . (lambda ()
+														(let ((lsp-keymap-prexix "C-c l")))))
+							)
 			 :config
 			 (setq lsp-headerline-breadcrumb-enable nil)
 			 (setq lsp-enable-on-type-formatting nil)
@@ -695,18 +696,18 @@
 	 #+end_src
 ** Flycheck
 	 #+begin_src emacs-lisp
-	 (use-package flycheck
-	   :ensure t
-	   :init
-	   (global-flycheck-mode))
+		 (use-package flycheck
+			 :ensure t
+			 :init
+			 (global-flycheck-mode))
 	 #+end_src
 
 ** C/C++
 	 #+begin_src emacs-lisp
-(add-hook 'c++-mode-hook 'lsp-deferred)
-(add-hook 'c-mode-hook 'lsp-deferred)
-(add-hook 'cuda-mode-hook 'lsp-deferred)
-(add-hook 'objc-mode-hook 'lsp-deferred)
+		 (add-hook 'c++-mode-hook 'lsp-deferred)
+		 (add-hook 'c-mode-hook 'lsp-deferred)
+		 (add-hook 'cuda-mode-hook 'lsp-deferred)
+		 (add-hook 'objc-mode-hook 'lsp-deferred)
 	 #+end_src
 
 ** CMake
@@ -720,41 +721,41 @@
 
 *** Typescript, Javascript, JSX, Node
 
-	 Install dependencies with:
+		Install dependencies with:
 
-	 npm install -g eslint babel-eslint eslint-plugin-react
+		npm install -g eslint babel-eslint eslint-plugin-react
 
-	 #+begin_src emacs-lisp
-	(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
-	(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
+		#+begin_src emacs-lisp
+			(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+			(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
 
-	(add-to-list 'auto-mode-alist '("\\.js\\'" . typescript-mode))
-	(add-to-list 'auto-mode-alist '("\\.jsx\\'" . typescript-mode))
-	(add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+			(add-to-list 'auto-mode-alist '("\\.js\\'" . typescript-mode))
+			(add-to-list 'auto-mode-alist '("\\.jsx\\'" . typescript-mode))
+			(add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
 
-	(add-hook 'typescript-mode-hook 'lsp-deferred)
-	(add-hook 'json-mode-hook 'lsp-deferred)
-	 #+end_src
+			(add-hook 'typescript-mode-hook 'lsp-deferred)
+			(add-hook 'json-mode-hook 'lsp-deferred)
+		#+end_src
 
 ** Bash
 
 	 #+begin_src emacs-lisp
-	(add-to-list 'auto-mode-alist '("\\.sh\\'" . sh-mode))
-	(add-hook 'sh-mode-hook 'lsp-deferred)
+		 (add-to-list 'auto-mode-alist '("\\.sh\\'" . sh-mode))
+		 (add-hook 'sh-mode-hook 'lsp-deferred)
 	 #+end_src
 	 
 ** YAML
 	 #+begin_src emacs-lisp
-	(use-package yaml-mode 
-	  :ensure t)
+		 (use-package yaml-mode 
+			 :ensure t)
 
-	(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
-	(add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
-	(add-hook 'yaml-mode-hook 'lsp-deferred)
+		 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+		 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
+		 (add-hook 'yaml-mode-hook 'lsp-deferred)
 	 #+end_src
 
 * Terminal	
-#+begin_src emacs-lisp
+	#+begin_src emacs-lisp
 
 		(use-package vterm
 			:commands vterm

@@ -153,14 +153,14 @@
 ;;(good-scroll-mode 1)
 
 (use-package fixmee
-  :ensure t)
+	:ensure t)
 (use-package button-lock
-  :ensure t)
+	:ensure t)
 
 (global-fixmee-mode 1)
 
 (use-package highlight-indent-guides
-  :ensure t)
+	:ensure t)
 
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 
@@ -217,6 +217,7 @@
 	:custom ((doom-modeline-height 15)))
 
 ;; Setup doom-themes
+(use-package gruvbox-theme :ensure t)
 (use-package doom-themes
 	:ensure t
 	:config
@@ -546,28 +547,28 @@
 (setq lsp-ui-sideline-show-hover t)
 (setq lsp-ui-sideline-show-code-actions t)
 
-		 (use-package lsp-mode
-			 :ensure t
-			 :hook (
-			 (web-mode . lsp-deferred)
-			   (lsp-mode . (lambda ()
-			   (let ((lsp-keymap-prexix "C-c l")))))
-			 )
-			 :config
-			 (setq lsp-headerline-breadcrumb-enable nil)
-			 (setq lsp-enable-on-type-formatting nil)
-			 (setq lsp-enable-links nil)
-			 (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-			 :commands lsp lsp-deferred)
+(use-package lsp-mode
+	:ensure t
+	:hook (
+				 (web-mode . lsp-deferred)
+				 (lsp-mode . (lambda ()
+											 (let ((lsp-keymap-prexix "C-c l")))))
+				 )
+	:config
+	(setq lsp-headerline-breadcrumb-enable nil)
+	(setq lsp-enable-on-type-formatting nil)
+	(setq lsp-enable-links nil)
+	(define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+	:commands lsp lsp-deferred)
 
-		 (use-package lsp-ui
-			 :ensure t
-			 :hook (lsp-mode . lsp-ui-mode)
-			 :custom
-			 (lsp-ui-doc-position 'bottom))
+(use-package lsp-ui
+	:ensure t
+	:hook (lsp-mode . lsp-ui-mode)
+	:custom
+	(lsp-ui-doc-position 'bottom))
 
-		 (use-package lsp-ivy
-			 :ensure t)
+(use-package lsp-ivy
+	:ensure t)
 
 (use-package flycheck
 	:ensure t
