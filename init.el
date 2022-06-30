@@ -6,6 +6,7 @@
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 (add-to-list 'package-archives '("elpa" . "http://elpa.gnu.org/packages/"))
 
+
 ;; Initialize packages
 (package-initialize)
 
@@ -50,50 +51,50 @@
 	:ensure t
 	:hook (company-mode . company-box-mode))
 
-(use-package ivy
-	:ensure t
-	:diminish
-	:bind (("C-s" . swiper)
-				 :map ivy-minibuffer-map
-				 ("TAB" . ivy-alt-done)
-				 ("C-l" . ivy-alt-done)
-				 ("C-j" . ivy-next-line)
-				 ("C-k" . ivy-previous-line)
-				 :map ivy-switch-buffer-map
-				 ("C-k" . ivy-previous-line)
-				 ("C-l" . ivy-done)
-				 ("C-d" . ivy-switch-buffer-kill)
-				 :map ivy-reverse-i-search-map
-				 ("C-k" . ivy-previous-line)
-				 ("C-d" . ivy-reverse-i-search-kill))
-	:config
-	(ivy-mode 1))
+;; (use-package ivy
+;; 	:ensure t
+;; 	:diminish
+;; 	:bind (("C-s" . swiper)
+;; 				 :map ivy-minibuffer-map
+;; 				 ("TAB" . ivy-alt-done)
+;; 				 ("C-l" . ivy-alt-done)
+;; 				 ("C-j" . ivy-next-line)
+;; 				 ("C-k" . ivy-previous-line)
+;; 				 :map ivy-switch-buffer-map
+;; 				 ("C-k" . ivy-previous-line)
+;; 				 ("C-l" . ivy-done)
+;; 				 ("C-d" . ivy-switch-buffer-kill)
+;; 				 :map ivy-reverse-i-search-map
+;; 				 ("C-k" . ivy-previous-line)
+;; 				 ("C-d" . ivy-reverse-i-search-kill))
+;; 	:config
+;; 	(ivy-mode 1))
 
-(use-package counsel
-	:ensure t
-	:bind (("C-M-j" . 'counsel-switch-buffer)
-				 :map minibuffer-local-map
-				 ("C-r" . 'counsel-minibuffer-history))
-	:custom
-	(counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
-	:config
-	(counsel-mode 1))
+;; (use-package counsel
+;; 	:ensure t
+;; 	:bind (("C-M-j" . 'counsel-switch-buffer)
+;; 				 :map minibuffer-local-map
+;; 				 ("C-r" . 'counsel-minibuffer-history))
+;; 	:custom
+;; 	(counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
+;; 	:config
+;; 	(counsel-mode 1))
 
-(use-package counsel-projectile
-	:ensure t
-	:after projectile
-	:config
-	(counsel-projectile-mode 1))
+;; (use-package counsel-projectile
+;; 	:ensure t
+;; 	:after projectile
+;; 	:config
+;; 	(counsel-projectile-mode 1))
 
 (use-package projectile
-	:diminish projectile-mode
-	:config (projectile-mode)
-	:bind-keymap
-	("C-c p" . projectile-command-map)
+	:ensure t
 	:init
-	(when (file-directory-p "~/workspace")
-		(setq projectile-project-search-path '("~/workspace")))
-	(setq projectile-switch-project-action #'projectile-dired))
+	(projectile-mode +1)
+	:bind (:map projectile-mode-map
+							("s-p" . projectile-command-map)
+							("C-c p" . projectile-command-map)))
+
+(setq projectile-project-search-path '("~/workspace/"))
 
 (use-package editorconfig
 	:ensure t
@@ -125,14 +126,14 @@
 (use-package helm-projectile
 	:ensure t)
 
-(use-package yasnippet
-	:ensure t)
+;; (use-package yasnippet
+;; 	:ensure t)
 
-(use-package auto-yasnippet
-	:ensure t)
+;; (use-package auto-yasnippet
+;; 	:ensure t)
 
-(setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-(yas-global-mode 1)
+;; (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+;; (yas-global-mode 1)
 
 (use-package ag
 	:ensure t)
@@ -152,25 +153,26 @@
 
 ;;(good-scroll-mode 1)
 
-(use-package fixmee
-	:ensure t)
-(use-package button-lock
-	:ensure t)
+;; (use-package fixmee
+;; 	:ensure t)
+;; (use-package button-lock
+;; 	:ensure t)
 
-(global-fixmee-mode 1)
+;; (global-fixmee-mode 1)
 
-(use-package highlight-indent-guides
-	:ensure t)
+;; (use-package highlight-indent-guides
+;; 	:ensure t)
 
-(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+;; (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 
-(setq highlight-indent-guides-method 'bitmap)
+;; (setq highlight-indent-guides-method 'bitmap)
 
 (setq auto-save-file-name-transforms
-			`((".*" ,(concat user-emacs-directory "auto-save/") t)))
+			`((".*" ,(concat user-emacs-directory "auto-save") t)))
 (setq backup-directory-alist
 			`(("." . ,(expand-file-name
 								 (concat user-emacs-directory "backups")))))
+(setq create-lockfiles nil)
 
 (show-paren-mode 1)
 
@@ -180,11 +182,16 @@
 ;; Delete selected text on insert
 (delete-selection-mode 1)
 
+(setq tab-always-indent 'complete
+			indent-tabs-mode nil)
+(setq-default indent-tabs-mode t)
+
 (setq-default tab-width 2)
 (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
 (setq indent-tabs-mode t)
 
 (global-visual-line-mode t)
+
 (setq-default word-wrap t)
 
 (setq ns-alternate-modifier 'none)
@@ -216,31 +223,40 @@
 	:init (doom-modeline-mode 1)
 	:custom ((doom-modeline-height 15)))
 
-;; Setup doom-themes
-(use-package gruvbox-theme :ensure t)
-(use-package doom-themes
-	:ensure t
-	:config
-	;; (setq doom-themes-enable-bold nil
-	;; 			doom-themes-enable-italic nil)
+		 ;; Setup doom-themes
+		 (use-package gruvbox-theme :ensure t)
+		 (use-package ample-theme :ensure t)
+		 (use-package zenburn-theme :ensure t)
+		 (use-package solarized-theme :ensure t)
 
-	(load-theme 'gruvbox-dark-medium t)
-	(load-theme 'gruvbox-dark-medium t)
 
-	(doom-themes-visual-bell-config)
-	(doom-themes-neotree-config)
-	;;(setq doom-themes-treemacs-theme "doom-gruvbox")
-	(setq doom-themes-treemacs-theme "gruvbox-dark-medium")
-	(doom-themes-treemacs-config)
-	(doom-themes-org-config))
-(use-package almost-mono-themes
-	:ensure t)
-;; (load-theme 'almost-mono-cream t)
-;; (use-package gruvbox-theme
-;; 	:ensure t)
-;; 	(use-package spacemacs-theme
-;; 	:defer t
-;; 	:init (load-theme 'spacemacs-dark t))
+		 (use-package doom-themes
+			 :ensure t
+			 :config
+			 ;; (setq doom-themes-enable-bold nil
+			 ;; 			doom-themes-enable-italic nil)
+
+			 ;; (load-theme 'gruvbox-dark-medium t)
+			 ;; (load-theme 'ample-light t)
+
+			 (doom-themes-visual-bell-config)
+			 (doom-themes-neotree-config)
+			 ;; (setq doom-themes-treemacs-theme "doom-gruvbox")
+			 ;; (setq doom-themes-treemacs-theme "gruvbox-dark-medium")
+			 (doom-themes-treemacs-config)
+			 (doom-themes-org-config))
+
+		 (use-package almost-mono-themes
+			 :ensure t)
+
+		 ;; (load-theme 'zenburn t)
+     (load-theme 'solarized-dark t)
+
+		 ;; (use-package gruvbox-theme
+		 ;; 	:ensure t)
+		 ;; 	(use-package spacemacs-theme
+		 ;; 	:defer t
+		 ;; 	:init (load-theme 'spacemacs-dark t))
 
 (use-package all-the-icons
 	:ensure t
@@ -285,6 +301,36 @@
 													(registers . 5)))	
 	(dashboard-setup-startup-hook))
 
+(use-package all-the-icons
+	:ensure t)
+;; (use-package neotree
+;; 	:ensure t)
+;; (defun neo-open-file-hide (full-path &optional arg)
+;; 	"Open a file node and hides tree."
+;; 	(neo-global--select-mru-window arg)
+;; 	(find-file full-path)
+;; 	(neotree-hide))
+
+;; (defun neotree-enter-hide (&optional arg)
+;; 	"Enters file and hides neotree directly"
+;; 	(interactive "P")
+;; 	(neo-buffer--execute arg 'neo-open-file-hide 'neo-open-dir))
+
+;; (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+;; (setq-default neo-show-hidden-files t)
+;; (setq neo-smart-open t)
+;; (setq projectile-switch-project-action 'neotree-projectile-action)
+;; (add-hook 'neotree-mode-hook
+;; 					(lambda ()
+;; 						(define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter-hide)
+;; 						;;(define-key evil-normal-state-local-map (kbd "SPC") 'neotree-quick-look)
+;; 						(define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
+;; 						(define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)
+;; 						(define-key evil-normal-state-local-map (kbd "g") 'neotree-refresh)
+;; 						(define-key evil-normal-state-local-map (kbd "n") 'neotree-next-line)
+;; 						(define-key evil-normal-state-local-map (kbd "p") 'neotree-previous-line)
+;; 						(define-key evil-normal-state-local-map (kbd "A") 'neotree-stretch-toggle)
+;; 						(define-key evil-normal-state-local-map (kbd "H") 'neotree-hidden-file-toggle)))
 (use-package treemacs
 	:ensure t
 	:defer t
@@ -347,16 +393,15 @@
 
 		(treemacs-follow-mode t)
 		(treemacs-filewatch-mode t)
-		(treemacs-fringe-indicator-mode 'always)
+		(treemacs-fringe-indicator-mode 'always))
 
-		(pcase (cons (not (null (executable-find "git")))
-								 (not (null treemacs-python-executable)))
-			(`(t . t)
-			 (treemacs-git-mode 'deferred))
-			(`(t . _)
-			 (treemacs-git-mode 'simple)))
-
-		(treemacs-hide-gitignored-files-mode nil))
+	;; (pcase (cons (not (null (executable-find "git")))
+	;; 						 (not (null treemacs-python-executable)))
+	;; 	(`(t . t)
+	;; 	 (treemacs-git-mode 'deferred))
+	;; 	(`(t . _)
+	;; 	 (treemacs-git-mode 'simple)))
+	;;(treemacs-hide-gitignored-files-mode nil))
 	:bind
 	(:map global-map
 				("M-0"       . treemacs-select-window)
@@ -368,6 +413,8 @@
 
 (with-eval-after-load 'treemacs
 	(define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
+
+;; (add-hook 'projectile-after-switch-project-hook 'treemacs-display-current-project-exclusively)
 
 (use-package treemacs-evil
 	:after (treemacs evil)
@@ -395,7 +442,7 @@
 					("DEPRECATED" font-lock-doc-face bold))))
 
 (defun efs/org-mode-setup ()
-																				;(org-indent-mode)
+	(org-indent-mode)
 	(variable-pitch-mode 1)
 	(visual-line-mode 1))
 
@@ -433,10 +480,12 @@
 	(setq org-agenda-start-with-log-mode t)
 	(setq org-log-done 'time)
 	(setq org-log-into-drawer t)
-
+	(setq org-src-preserve-indentation t)
+	(setq org-src-tab-acts-natively t)
 	(setq org-agenda-files
 				'("~/workspace/orgfiles/tasks.org"))
-
+	(setq org-adapt-indentation nil)
+	(setq org-hide-leading-stars t)
 	(setq org-todo-keywords
 				'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
 					(sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
@@ -511,19 +560,49 @@
 
 	(efs/org-font-setup))
 
+(add-hook 'org-tab-first-hook
+          (lambda ()
+            (when (org-in-src-block-p t)
+              (let* ((elt (org-element-at-point))
+                     (lang (intern (org-element-property :language elt)))
+                     (langs org-babel-load-languages))
+                (unless (alist-get lang langs)
+                  (indent-to 4))))))
+
+(defun my/use-text-mode-org-comments (args)
+  "Use text-mode for editing comments"
+  (unless (nth 2 args)
+    (setf (nth 2 args) 'text-mode))
+  args)
+
+(advice-add 'org-src--edit-element 
+            :filter-args #'my/use-text-mode-org-comments)
+
 (use-package org-bullets
 	:after org
+	:ensure t
 	:hook (org-mode . org-bullets-mode)
 	:custom
 	(org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
 (defun efs/org-mode-visual-fill ()
-	(setq visual-fill-column-width 100
+	(setq visual-fill-column-width 150
 				visual-fill-column-center-text t)
 	(visual-fill-column-mode 1))
 
 (use-package visual-fill-column
+	:ensure t
 	:hook (org-mode . efs/org-mode-visual-fill))
+
+(defun my-fill-column-hook ()
+  (visual-fill-column-mode 1)
+  (visual-line-mode 1))
+
+(add-hook 'text-mode-hook #'efs/org-mode-visual-fill)
+
+; (add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
+; (global-visual-line-mode t)
+; (define-key visual-line-mode-map [remap kill-line] nil)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -550,6 +629,7 @@
 (use-package lsp-mode
 	:ensure t
 	:hook (
+
 				 (web-mode . lsp-deferred)
 				 (lsp-mode . (lambda ()
 											 (let ((lsp-keymap-prexix "C-c l")))))
@@ -570,6 +650,46 @@
 (use-package lsp-ivy
 	:ensure t)
 
+(setq lsp-language-id-configuration '((java-mode . "java")
+
+																			(python-mode . "python")
+
+																			(gfm-view-mode . "markdown")
+
+																			(rust-mode . "rust")
+
+																			(css-mode . "css")
+
+																			(xml-mode . "xml")
+
+																			(c-mode . "c")
+
+																			(c++-mode . "cpp")
+
+																			(objc-mode . "objective-c")
+
+																			(web-mode . "html")
+
+																			(html-mode . "html")
+
+																			(sgml-mode . "html")
+
+																			(mhtml-mode . "html")
+
+																			(go-mode . "go")
+
+																			(haskell-mode . "haskell")
+
+																			(php-mode . "php")
+
+																			(json-mode . "json")
+
+																			(web-mode . "javascript")
+
+																			;;(typescript-mode . "typescript")
+
+																			))
+
 (use-package flycheck
 	:ensure t
 	:init
@@ -588,12 +708,53 @@
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
 
-(add-to-list 'auto-mode-alist '("\\.js\\'" . typescript-mode))
-(add-to-list 'auto-mode-alist '("\\.jsx\\'" . typescript-mode))
+;; (add-to-list 'auto-mode-alist '("\\.js\\'" . typescript-mode))
+;; (add-to-list 'auto-mode-alist '("\\.jsx\\'" . typescript-mode))
 (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+
+(use-package web-mode
+  :ensure t
+  :mode ("\\.html?\\'"
+         "/themes/.*\\.php?\\'"
+         "/\\(components\\|containers\\|src\\)/.*\\.js[x]?\\'"
+         "\\.\\(handlebars\\|hbs\\)\\'")
+  :config (progn
+            (setq
+             web-mode-markup-indent-offset 2
+             web-mode-css-indent-offset 2
+             web-mode-code-indent-offset 2
+             web-mode-enable-auto-closing t
+             web-mode-enable-auto-opening t
+             web-mode-enable-auto-pairing t
+             web-mode-enable-auto-indentation t
+             web-mode-enable-auto-quoting t
+             web-mode-enable-current-column-highlight t
+             web-mode-enable-current-element-highlight t
+             web-mode-content-types-alist
+             '(("jsx" . "/\\(components\\|containers\\|src\\)/.*\\.js[x]?\\'")))))
+
+;;(use-package js2-mode :ensure t
+;;	:mode
+;;	(("\\.js\\'" . js2-mode))
+;;	:custom
+;;	(js2-include-node-externs t)
+;;	(js2-global-externs '("customElements"))
+;;	(js2-highlight-level 3)
+;;	(js2r-prefer-let-over-var t)
+;;	(js2r-prefered-quote-type 2)
+;;	(js-indent-align-list-continuation t)
+;;	(global-auto-highlight-symbol-mode t)
+;;	:config
+;;	(setq js-indent-level 2)
+;;	(advice-add #'js2-identifier-start-p
+;;							:after-until
+;;							(lambda (c) (eq c ?#))))
+
 
 (add-hook 'typescript-mode-hook 'lsp-deferred)
 (add-hook 'json-mode-hook 'lsp-deferred)
+(add-hook 'web-mode-hook 'lsp-deferred)
+(add-hook 'css-mode 'lsp-deferred)
 
 (add-to-list 'auto-mode-alist '("\\.sh\\'" . sh-mode))
 (add-hook 'sh-mode-hook 'lsp-deferred)
@@ -605,31 +766,31 @@
 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
 (add-hook 'yaml-mode-hook 'lsp-deferred)
 
-(use-package vterm
-	:commands vterm
-	:config
-	(setq term-prompt-regexp "^[^#$%>\n]*[#$%>| *")
-	)
-
-(use-package term
-	:config
-	(setq explicit-shell-file-name "bash")
-	(setq term-prompt-regexp "^[^#$%>\n]*[#$%>| *"))
-
 (global-set-key (kbd "M-<tab>") 'other-window)
 
+(define-key evil-normal-state-map (kbd "C-t") 'treemacs)
+
 (define-key evil-motion-state-map " " nil)
+
 (define-key evil-normal-state-map (kbd "C-r") 'replace-regexp)
 (define-key evil-normal-state-map (kbd "C-S-R") 'ag-project-regexp)
 
 ;; Double spaces for finding files
 (define-key evil-normal-state-map (kbd "SPC SPC") 'helm-projectile-find-file)
 
+(define-key evil-motion-state-map (kbd "SPC h") 'evil-window-left)
+(define-key evil-motion-state-map (kbd "SPC j") 'evil-window-down)
+(define-key evil-motion-state-map (kbd "SPC k") 'evil-window-up)
+(define-key evil-motion-state-map (kbd "SPC l") 'evil-window-right)
+
+(define-key evil-normal-state-map (kbd "SPC h") 'evil-window-left)
+(define-key evil-normal-state-map (kbd "SPC j") 'evil-window-down)
+(define-key evil-normal-state-map (kbd "SPC k") 'evil-window-up)
+(define-key evil-normal-state-map (kbd "SPC l") 'evil-window-right)
+
 ;; Quick buffer switching
 (define-key evil-normal-state-map (kbd "M-l") 'next-buffer)
 (define-key evil-normal-state-map (kbd "M-h") 'previous-buffer)
-(define-key term-mode-map (kbd "M-l") 'next-buffer)
-(define-key term-mode-map (kbd "M-h") 'previous-buffer)
 
 (define-key evil-normal-state-map (kbd "C-c c") 'uncomment-region)
 (define-key evil-insert-state-map (kbd "C-c u") 'uncomment-region)
@@ -658,14 +819,7 @@
 (define-key evil-normal-state-map (kbd "C-c k") 'evil-window-up)
 (define-key evil-normal-state-map (kbd "C-c l") 'evil-window-right)
 
-(define-key term-raw-map (kbd "C-c k") 'evil-window-up)
-(define-key term-raw-map (kbd "C-c j") 'evil-window-down)
-(define-key term-raw-map (kbd "C-c l") 'evil-window-right)
-(define-key term-raw-map (kbd "C-c h") 'evil-window-left)
-
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (define-key evil-insert-state-map (kbd "M-b") 'helm-buffers-list)
 (define-key evil-normal-state-map (kbd "M-b") 'helm-buffers-list)
-
-(define-key evil-normal-state-map (kbd "t") 'term)
