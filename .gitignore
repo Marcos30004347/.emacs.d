@@ -21,7 +21,6 @@ projectile-bookmarks.eld
 /.emacs.desktop
 /.emacs.desktop.lock
 *.elc
-auto-save-list
 tramp
 .\#*
 
@@ -63,3 +62,8 @@ flycheck_*.el
 
 # network security
 /network-security.data
+projects/
+*.cache
+projectile*
+recentf
+projectile-bookmarks.eld

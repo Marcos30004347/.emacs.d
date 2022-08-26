@@ -1,4 +1,3 @@
-
 ;;; naysayer-theme.el --- The naysayer color theme
 
 ;; Author: Nick Aversano <nickav@users.noreply.github.com>
@@ -36,13 +35,17 @@
       (builtin      "#ffffff")
       (selection  "#0000ff")
       (text       "#d1b897")
+      (text-dark       "#a38e72")
       (comments   "#44b340")
+      ;; (comments   "#041214")
       (punctuation "#8cde94")
+      ;; (punctuation "#3c6940")
       (keywords "#ffffff")
       (variables "#c1d1e3")
       (functions "#ffffff")
       (methods    "#c1d1e3")
       (strings    "#2ec09c")
+      (dark-strings    "#256354")
       (constants "#7ad0c6")
       (macros "#8cde94")
       (numbers "#7ad0c6")
@@ -62,7 +65,7 @@
    `(region                           ((t (:foreground nil :background ,selection))))
    `(cursor                           ((t (:background ,white                        ))))
    `(fringe                           ((t (:background ,background   :foreground ,white))))
-   `(linum                            ((t (:background ,background :foreground ,gutter-fg))))
+   `(linum                            ((t (:background ,background :foreground ,dark-strings))))
    `(highlight ((t (:foreground nil :background ,selection))))
 
    ;; Font lock faces
@@ -115,7 +118,7 @@
    `(mode-line ((t (:inverse-video unspecified
                                    :underline unspecified
                                    :foreground ,background
-                                   :background ,text
+                                   :background ,text-dark
                                    :box nil))))
    `(powerline-active1 ((t (:background ,text :foreground ,background))))
    `(powerline-active2 ((t (:background ,text :foreground ,background))))
@@ -141,18 +144,25 @@
 
    ;; highlight numbers
    `(highlight-numbers-number ((t (:foreground ,numbers))))
-  )
+   )
+
+  ;; (custom-theme-set-variables
+  ;;   'naysayer
+  ;;   '(linum-format " %5i ")
+	;; 	)
+
 
   (custom-theme-set-variables
-    'naysayer
-    '(linum-format " %5i ")
-  )
-)
+   'naysayer
+   '(linum-format "%i ")
+   )
+	)
 
 ;;;###autoload
 (when (and (boundp 'custom-theme-load-path) load-file-name)
   (add-to-list 'custom-theme-load-path
                (file-name-as-directory (file-name-directory load-file-name))))
+
 
 ;; *****************************************************************************
 
