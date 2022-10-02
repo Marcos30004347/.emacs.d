@@ -255,6 +255,7 @@
 (mapc (lambda (hook)
         (add-hook hook (lambda () (setup-iosevka-ligatures) (refresh-pretty))))
       '(text-mode-hook
-        prog-mode-hook))
+        prog-mode-hook
+				magic-mode-hook))
 
 (global-prettify-symbols-mode +1)

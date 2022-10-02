@@ -31,7 +31,7 @@
 (setq magic-font-lock-keywords
       (let* (
              ;; define several category of keywords
-             (x-keywords '("func" "function" "effc" "effect" "eff" "handler" "ef" "continue" "hd" "do" "while" "resume" "with" "yield" "then" "in" "operator" "assert" "else" "for" "if" "return" "while" "where" "match" "extern" "implies" "union" "struct" "fn" "ty" "as" "is" "from" "therefore" "because"))
+             (x-keywords '("func" "function" "effc" "effect" "using" "eff" "handler" "ef" "continue" "hd" "do" "while" "resume" "with" "yield" "then" "in" "operator" "assert" "else" "for" "if" "return" "while" "where" "match" "extern" "implies" "union" "struct" "fn" "ty" "as" "is" "from" "therefore" "because"))
              (x-types '("unit" "bool" "c8" "n32" "i32" "Undefined" "nat32" "int32" "char8" "any" "type"))
              (x-constants '("ACTIVE" "AGENT" "ALL_SIDES" "ATTACH_BACK"))
              (x-events '("at_rot_target" "at_target" "attach"))
