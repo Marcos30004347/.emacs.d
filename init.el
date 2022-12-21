@@ -1,25 +1,25 @@
-(require 'package)
-;; Disable automatic package startup
-(setq package-enable-at-startup nil)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
-(add-to-list 'package-archives '("elpa" . "http://elpa.gnu.org/packages/"))
-;; Initialize packages
-(package-initialize)
+  (require 'package)
+  ;; Disable automatic package startup
+  (setq package-enable-at-startup nil)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+  (add-to-list 'package-archives '("elpa" . "http://elpa.gnu.org/packages/"))
+  ;; Initialize packages
+  (package-initialize)
 
-(use-package evil
-	:ensure t
-	:init
-	(setq evil-want-integration t)
-	(setq evil-want-C-u-scroll t)
+  (use-package evil
+	  :ensure t
+	  :init
+	  (setq evil-want-integration t)
+	  (setq evil-want-C-u-scroll t)
 
-	(setq evil-cross-lines t)
+	  (setq evil-cross-lines t)
 
-	:config
-	(evil-mode 1)
+	  :config
+	  (evil-mode 1)
 
-	(evil-global-set-key 'motion "j" 'evil-next-visual-line)
-	(evil-global-set-key 'motion "k" 'evil-previous-visual-line))
+	  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+	  (evil-global-set-key 'motion "k" 'evil-previous-visual-line))
 
 ;;(use-package auto-complete
 ;;	:ensure t
@@ -98,7 +98,6 @@
 
 (use-package helm
 	:ensure t
-	:preface (require 'helm-config)
 	:init
 	(setq helm-split-window-in-side-p t
         helm-move-to-line-cycle-in-source t)
@@ -214,31 +213,6 @@
 ;; (require 'sublimity-attractive)
 ;; (sublimity-mode 1)
 
-(use-package doom-modeline
-	:ensure t
-	:init (doom-modeline-mode 1)
-  :config
-  :custom
-	(doom-modeline-height 15)
-  (doom-modeline-bar-width 1)
-  (doom-modeline-icon t)
-  (doom-modeline-major-mode-icon t)
-  (doom-modeline-major-mode-color-icon t)
-  (doom-modeline-buffer-file-name-style 'truncate-upto-project)
-  (doom-modeline-buffer-state-icon t)
-  (doom-modeline-buffer-modification-icon t)
-  (doom-modeline-minor-modes nil)
-  (doom-modeline-enable-word-count nil)
-  (doom-modeline-buffer-encoding t)
-  (doom-modeline-indent-info nil)
-  (doom-modeline-checker-simple-format t)
-  (doom-modeline-vcs-max-length 12)
-  (doom-modeline-env-version t)
-  (doom-modeline-irc-stylize 'identity)
-  (doom-modeline-github-timer nil)
-  (doom-modeline-gnus-timer nil)
-	)
-
 ;; Setup doom-themes
 (use-package gruvbox-theme :ensure t)
 (use-package ample-theme :ensure t)
@@ -265,11 +239,12 @@
 ;; (use-package almost-mono-themes
 ;; :ensure t)
 
-;; (load-theme 'naysayer t)
+(load-theme 'naysayer t)
 ;; (set-face-attribute 'fringe nil :background (face-background 'default))
 
 ;; (load-theme 'doom-verde t)
 ;; (load-theme 'zenburn t)
+;; (load-theme 'gruber-darker t)
 
 ;; (use-package gruvbox-theme
 ;; 	:ensure t)
@@ -325,97 +300,6 @@
                           (agenda . 5)
                           (registers . 5)))	
   (dashboard-setup-startup-hook))
-
-(use-package all-the-icons
-  :ensure t)
-
-(use-package treemacs
-  :ensure t
-  :defer t
-  :init
-  (with-eval-after-load 'winum
-    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-  :config
-  (progn
-    (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
-          treemacs-deferred-git-apply-delay        0.5
-          treemacs-directory-name-transformer      #'identity
-          treemacs-display-in-side-window          t
-          treemacs-eldoc-display                   t
-          treemacs-file-event-delay                5000
-          treemacs-file-extension-regex            treemacs-last-period-regex-value
-          treemacs-file-follow-delay               0.2
-          treemacs-file-name-transformer           #'identity
-          treemacs-follow-after-init               t
-          treemacs-expand-after-init               t
-          treemacs-git-command-pipe                ""
-          treemacs-goto-tag-strategy               'refetch-index
-          treemacs-indentation                     2
-          treemacs-indentation-string              " "
-          treemacs-is-never-other-window           nil
-          treemacs-max-git-entries                 5000
-          treemacs-missing-project-action          'ask
-          treemacs-move-forward-on-expand          nil
-          treemacs-no-png-images                   nil
-          treemacs-no-delete-other-windows         t
-          treemacs-project-follow-cleanup          nil
-          treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-          treemacs-position                        'left
-          treemacs-read-string-input               'from-child-frame
-          treemacs-recenter-distance               0.1
-          treemacs-recenter-after-file-follow      nil
-          treemacs-recenter-after-tag-follow       nil
-          treemacs-recenter-after-project-jump     'always
-          treemacs-recenter-after-project-expand   'on-distance
-          treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
-          treemacs-show-cursor                     nil
-          treemacs-show-hidden-files               t
-          treemacs-silent-filewatch                nil
-          treemacs-silent-refresh                  nil
-          treemacs-sorting                         'alphabetic-asc
-          treemacs-select-when-already-in-treemacs 'move-back
-          treemacs-space-between-root-nodes        t
-          treemacs-tag-follow-cleanup              t
-          treemacs-tag-follow-delay                1.5
-          treemacs-user-mode-line-format           nil
-          treemacs-user-header-line-format         nil
-          treemacs-wide-toggle-width               70
-          treemacs-width                           25
-          treemacs-width-increment                 1
-          treemacs-width-is-initially-locked       nil
-          treemacs-workspace-switch-cleanup        nil)
-
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode 'always))
-  (treemacs-project-follow-mode t)
-
-
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
-
-(with-eval-after-load 'treemacs
-  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
-
-(add-hook 'projectile-after-switch-project-hook 'treemacs-display-current-project-exclusively)
-
-(use-package treemacs-evil
-  :after (treemacs evil)
-  :ensure t)
-
-(use-package treemacs-projectile
-  :after (treemacs projectile)
-  :ensure t)
-
-(use-package treemacs-icons-dired
-  :hook (dired-mode . treemacs-icons-dired-enable-once)
-  :ensure t)
 
 (use-package hl-todo
   :ensure t
@@ -849,9 +733,6 @@
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
 (add-hook 'yaml-mode-hook 'lsp-deferred)
-
-(setq twelf-root "/Applications/Twelf/")
-(load (concat twelf-root "emacs/twelf-init.el"))
 
 (defun my-org-todo-toggle ()
   (interactive)
