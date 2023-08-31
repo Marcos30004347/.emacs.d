@@ -4,6 +4,7 @@
 	(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 	(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 	(add-to-list 'package-archives '("elpa" . "http://elpa.gnu.org/packages/"))
+
 	;; Initialize packages
 	(package-initialize)
 
@@ -28,13 +29,6 @@
 
 		(evil-global-set-key 'motion "j" 'evil-next-visual-line)
 		(evil-global-set-key 'motion "k" 'evil-previous-visual-line))
-
-	;;(use-package auto-complete
-	;;	:ensure t
-	;;	:init
-	;;	(progn
-	;;		(ac-config-default)
-	;;		(global-auto-complete-mode t)))
 
 	(use-package company
 		:ensure t
@@ -164,8 +158,15 @@
 	;; (setq highlight-indent-guides-method 'bitmap)
 
 	(use-package vterm
-		:ensure t
-		)
+  :ensure t	
+	:load-path  "./emacs-libvterm/")
+
+(setq auto-save-file-name-transforms
+`((".*" ,(concat user-emacs-directory "auto-save") t)))
+(setq backup-directory-alist
+`(("." . ,(expand-file-name
+(concat user-emacs-directory "backups")))))
+(setq create-lockfiles nil)
 
 	(show-paren-mode 1)
 
@@ -239,19 +240,19 @@
 																					;(load-theme 'doom-one t)
 
 		(doom-themes-visual-bell-config)
-		(doom-themes-neotree-config)
+		;; (doom-themes-neotree-config)
     ;; (setq doom-themes-treemacs-theme "doom-one")
 		(setq doom-themes-treemacs-theme "gruvbox-dark-medium")
-		(doom-themes-treemacs-config)
+		;; (doom-themes-treemacs-config)
 		(doom-themes-org-config))
 
 	;; (use-package almost-mono-themes
 	;; :ensure t)
 
-	(load-theme 'gruvbox t)
+	;;(load-theme 'gruvbox t)
 	;;(load-theme 'minimal-light t)
 	;;(load-theme 'tao-yang t)
-	;; (load-theme 'naysayer t)
+ (load-theme 'naysayer t)
 	;; (set-face-attribute 'fringe nil :background (face-background 'default))
 
 	;; (load-theme 'doom-verde t)
@@ -281,31 +282,17 @@
 	;; 	:if (display-graphic-p)
 	;; 	:hook (dired-mode . all-the-icons-dired-mode))
 
-	(set-face-attribute 'default nil :font "Iosevka" :height 130)
-	(set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 130)
+	(set-face-attribute 'default nil :font "Iosevka" :height 200)
+	(set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 200)
 
 	(load "~/.emacs.d/iosevka-lig")
 
-	(set-face-attribute 'variable-pitch nil :font "Cantarell" :height 130 :weight 'regular)
-																					;(eval-after-load "linum" '(set-face-attribute 'linum nil :font "Iosevka" :height 120 :weight 'regular))
-
-																					;(set-face-attribute 'default nil :font "Fira Code" :height 150)
-																					;(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 150)
-
-																					;(use-package fira-code-mode
-																					;  :ensure t
-																					;  :config (global-fira-code-mode))
-
-	(set-face-attribute 'mode-line nil :font "Fira Code" :height 130)
+	(set-face-attribute 'mode-line nil :font "Fira Code" :height 120)
 
 	;; (set-face-attribute 'mode-line-inactive nil :height 100)
 
 (use-package treemacs
   :ensure t
-  :defer t
-  :init
-  (with-eval-after-load 'winum
-    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
   :config
   (progn
     (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
@@ -365,7 +352,7 @@
     ;; using a Hi-DPI display, uncomment this to double the icon size.
     ;;(treemacs-resize-icons 44)
 
-    (treemacs-follow-mode t)
+    (treemacs-follow-mode 0)
     (treemacs-filewatch-mode t)
     (treemacs-fringe-indicator-mode 'always)
     (when treemacs-python-executable
@@ -422,22 +409,22 @@
 	(setq nerd-icons-font-family "Symbols Nerd Fonts Mono")
 	(treemacs-follow-mode 0)
 
-	(use-package dashboard
-		:ensure t
-		:config
-		(setq dashboard-set-heading-icons t)
-		(setq dashboard-set-file-icons t)
-		(setq dashboard-set-navigator t)
-		(setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
-		(setq dashboard-startup-banner "~/.emacs.d/dashboard-logos/acdc.txt")
-		(setq dashboard-center-content t)
-		(setq dashboard-show-shortcuts t)
-		(setq dashboard-items '((recents  . 5)
-														(bookmarks . 5)
-														(projects . 5)
-														(agenda . 5)
-														(registers . 5)))	
-		(dashboard-setup-startup-hook))
+	;; (use-package dashboard
+	;; 	:ensure t
+	;; 	:config
+	;; 	(setq dashboard-set-heading-icons t)
+	;; 	(setq dashboard-set-file-icons t)
+	;; 	(setq dashboard-set-navigator t)
+	;; 	(setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
+	;; 	(setq dashboard-startup-banner "~/.emacs.d/dashboard-logos/acdc.txt")
+	;; 	(setq dashboard-center-content t)
+	;; 	(setq dashboard-show-shortcuts t)
+	;; 	(setq dashboard-items '((recents  . 5)
+	;; 													(bookmarks . 5)
+	;; 													(projects . 5)
+	;; 													(agenda . 5)
+	;; 													(registers . 5)))	
+	;; 	(dashboard-setup-startup-hook))
 
 	(use-package hl-todo
 		:ensure t
@@ -502,7 +489,7 @@
 										(org-level-6 . 1.1)
 										(org-level-7 . 1.1)
 										(org-level-8 . 1.1)))
-			(set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+			(set-face-attribute (car face) nil :font "Iosevka" :weight 'regular :height (cdr face)))
 
 		;; Ensure that anything that should be fixed-pitch in Org files appears that way
 		(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -893,8 +880,6 @@
 			(run-hooks 'post-command-hook)
 			(org-flag-subtree t)))
 
-																					; (define-key org-mode-map (kbd "C-c C-d") 'my-org-todo-toggle)
-
 	(global-set-key (kbd "M-<f11>") 'toggle-frame-fullscreen)
 	(global-set-key (kbd "M-<tab>") 'other-window)
 	(global-set-key (kbd "C-c a") 'cfw:open-org-calendar)
@@ -921,8 +906,8 @@
 	(define-key evil-motion-state-map (kbd "SPC k") 'evil-window-up)
 	(define-key evil-motion-state-map (kbd "SPC l") 'evil-window-right)
 
-	(define-key evil-normal-state-map (kbd "SPC h") 'evil-window-left)
 	(define-key evil-normal-state-map (kbd "SPC j") 'evil-window-down)
+	(define-key evil-normal-state-map (kbd "SPC h") 'evil-window-left)
 	(define-key evil-normal-state-map (kbd "SPC k") 'evil-window-up)
 	(define-key evil-normal-state-map (kbd "SPC l") 'evil-window-right)
 
@@ -930,13 +915,8 @@
 	(define-key evil-normal-state-map (kbd "M-l") 'next-buffer)
 	(define-key evil-normal-state-map (kbd "M-h") 'previous-buffer)
 
-	(define-key evil-normal-state-map (kbd "M-<right>") 'next-buffer)
-	(define-key evil-normal-state-map (kbd "M-<left>") 'previous-buffer)
-
-	(define-key evil-normal-state-map (kbd "C-c c") 'uncomment-region)
-	(define-key evil-insert-state-map (kbd "C-c u") 'uncomment-region)
-	(define-key evil-normal-state-map (kbd "C-c c") 'comment-region)
-	(define-key evil-insert-state-map (kbd "C-c u") 'comment-region)
+	(define-key evil-visual-state-map (kbd "C-c c") 'uncomment-region)
+	(define-key evil-visual-state-map (kbd "C-c u") 'comment-region)
 
 	;; Move lines with M-j, M-k in normal and insert mode
 	(define-key evil-normal-state-map (kbd "M-k") 'move-text-up)
@@ -944,36 +924,7 @@
 	(define-key evil-insert-state-map (kbd "M-k") 'move-text-up)
 	(define-key evil-insert-state-map (kbd "M-j") 'move-text-down)
 
-
-	(define-key evil-normal-state-map (kbd "M-<up>") 'move-text-up)
-	(define-key evil-normal-state-map (kbd "M-<down>") 'move-text-down)
-	(define-key evil-insert-state-map (kbd "M-<up>") 'move-text-up)
-	(define-key evil-insert-state-map (kbd "M-<down>") 'move-text-down)
-
-
-	(define-key evil-insert-state-map (kbd "C-c h") 'evil-window-left)
-	(define-key evil-insert-state-map (kbd "C-c j") 'evil-window-down)
-	(define-key evil-insert-state-map (kbd "C-c k") 'evil-window-up)
-	(define-key evil-insert-state-map (kbd "C-c l") 'evil-window-right)
-	(define-key evil-normal-state-map (kbd "C-c h") 'evil-window-left)
-	(define-key evil-normal-state-map (kbd "C-c j") 'evil-window-down)
-	(define-key evil-normal-state-map (kbd "C-c k") 'evil-window-up)
-	(define-key evil-normal-state-map (kbd "C-c l") 'evil-window-right)
-
 	(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 	(define-key evil-insert-state-map (kbd "M-b") 'helm-buffers-list)
 	(define-key evil-normal-state-map (kbd "M-b") 'helm-buffers-list)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-	 '(json-mode yaml-mode web-mode cmake-mode opencl-mode clang-format+ flycheck dap-mode lsp-ivy lsp-ui lsp-mode visual-fill-column org-bullets calfw-org calfw auctex hl-todo dashboard treemacs-nerd-icons treemacs-tab-bar treemacs-persp treemacs-magit treemacs-icons-dired treemacs-projectile treemacs-evil treemacs all-the-icons nerd-icons doom-themes tao-theme minimal-theme solarized-theme zenburn-theme ample-theme gruvbox-theme vterm wgrep-ag wgrep ag helm-gitignore helm-projectile helm move-text editorconfig counsel-projectile counsel ivy company-box company evil use-package)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

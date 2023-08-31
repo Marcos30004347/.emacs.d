@@ -23,7 +23,9 @@ projectile-bookmarks.eld
 *.elc
 tramp
 .\#*
-
+recentf
+url/
+.cache
 # Org-mode
 .org-id-locations
 *_archive
