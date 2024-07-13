@@ -6,6 +6,8 @@ auto-save-list/
 elpa/
 *.org
 *.eld
+auto-save-list
+backup
 recentf
 .cache/
 .lsp-session-v1
