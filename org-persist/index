@@ -1,0 +1,21 @@
+((:container
+	((elisp org-element--headline-cache)
+	 (elisp org-element--cache))
+	:persist-file "95/c2eb2d-395c-4771-8214-2a64fd58eb16" :associated
+	(:hash "c6c5b6c8eecd4291b31a257a95075f2c" :file "/Users/marcosvinicius/workspace/ideas/ideas.org" :inode 1395956)
+	:expiry 30 :last-access 1721345307.861559 :last-access-hr "2024-07-18T20:28:27-0300")
+ (:container
+	((elisp org-element--headline-cache)
+	 (elisp org-element--cache))
+	:persist-file "4e/959000-8946-49e5-9ed1-f0e2971d7311" :associated
+	(:hash "2c591c3cc48c5425accf627d17d576ac" :file "/Users/marcosvinicius/.emacs.d/emacs.org" :inode 1285884)
+	:expiry 30 :last-access 1721345307.872627 :last-access-hr "2024-07-18T20:28:27-0300")
+ (:container
+	((elisp org-element--headline-cache)
+	 (elisp org-element--cache))
+	:persist-file "5e/920460-bd24-4c66-a957-c5574382af63" :associated
+	(:hash "ee52a914842a4ad26b03b2c1e5d30e9c" :file "/Users/marcosvinicius/workspace/ideas/glicemia.org" :inode 1959786)
+	:expiry 30 :last-access 1721345307.87624 :last-access-hr "2024-07-18T20:28:27-0300")
+ (:container
+	((index "3.1"))
+	:persist-file "58/beec9c-c8b4-4818-9bb5-4772bcbcd257" :associated nil :expiry never :last-access 1721345307.881886 :last-access-hr "2024-07-18T20:28:27-0300"))

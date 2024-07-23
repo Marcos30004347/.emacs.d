@@ -61,6 +61,7 @@
   (setq evil-want-integration t)
   (setq evil-want-C-u-scroll t)
   (setq evil-cross-lines t)
+																				; (setq evil-want-minibuffer t)
   :config
   (evil-mode 1)
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
@@ -72,11 +73,12 @@
 (define-key evil-motion-state-map " " nil)
 (define-key evil-normal-state-map (kbd "C-x s") 'ag-project)
 (define-key evil-normal-state-map (kbd "C-s") 'swiper)
-(define-key evil-normal-state-map (kbd "C-r") 'replace-regexp)
+(define-key evil-normal-state-map (kbd "C-o") 'find-file)
+(define-key evil-normal-state-map (kbd "C-r") 'lsp-rename)
 (define-key evil-visual-state-map (kbd "c") 'uncomment-region)
 (define-key evil-visual-state-map (kbd "u") 'comment-region)
-(define-key evil-normal-state-map (kbd "M-k") 'move-text-up)
-(define-key evil-normal-state-map (kbd "M-j") 'move-text-down)
+(define-key evil-visual-state-map (kbd "M-k") 'move-text-up)
+(define-key evil-visual-state-map (kbd "M-j") 'move-text-down)
 (define-key evil-insert-state-map (kbd "M-k") 'move-text-up)
 (define-key evil-insert-state-map (kbd "M-j") 'move-text-down)
 (define-key evil-insert-state-map (kbd "M-b") 'helm-buffers-list)
@@ -88,20 +90,29 @@
 (define-key evil-normal-state-map (kbd "M-k") 'evil-window-prev)
 (define-key evil-normal-state-map (kbd "<backspace>") 'xref-go-back)
 (define-key evil-normal-state-map (kbd "<return>") 'lsp-find-definition)
-(define-key evil-normal-state-map (kbd "<S-return>") 'lsp-find-declaration)
+(define-key evil-normal-state-map (kbd "S-<return>") 'lsp-find-references)
+
+
+(defun my-xref-goto-xref ()
+  "Go to the reference at point."
+  (interactive)
+  (xref-goto-xref))
+
+;; Use `evil-define-key` to bind RET to `xref-goto-xref` in `xref` buffers
+(evil-define-key 'normal xref--xref-buffer-mode-map (kbd "RET") 'my-xref-goto-xref)
+(evil-define-key 'normal xref--xref-buffer-mode-map (kbd "<return>") 'my-xref-goto-xref)
+
 
 ;; Font
-(set-face-attribute 'default nil :font "Iosevka" :height 200)
-(set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 200)
+(set-face-attribute 'default nil :font "Iosevka" :height 120)
+(set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 120)
 (load "~/.emacs.d/iosevka-lig")
 (set-face-attribute 'mode-line nil :font "Fira Code" :height 120)
-(use-package nerd-icons
-  :ensure t
-  :custom
-  (nerd-icons-font-family "Symbols Nerd Font Mono")
-  )
-(use-package all-the-icons
-  :ensure t)
+;; (use-package nerd-icons
+;;   :ensure t
+;;   :custom
+;;   (nerd-icons-font-family "Symbols Nerd Font Mono")
+;;   )
 
 ;; Theme
 (use-package gruber-darker-theme :ensure t)
@@ -173,12 +184,13 @@
   :ensure t)
 
 (use-package helm-projectile
-	:ensure t
-	:config
+  :ensure t
+  :config
   (helm-projectile-on)
-	(global-set-key (kbd "C-x C-f") 'helm-projectile-find-file)
-	(global-set-key (kbd "C-x C-s") 'helm-projectile-switch-to-buffer)
-	(global-set-key (kbd "C-x C-b") 'helm-projectile-switch-to-buffer))
+  (define-key evil-normal-state-map (kbd "SPC SPC") 'helm-projectile-find-file)
+  (global-set-key (kbd "C-x C-f") 'helm-projectile-find-file)
+  (global-set-key (kbd "C-x C-s") 'helm-projectile-switch-to-buffer)
+  (global-set-key (kbd "C-x C-b") 'helm-projectile-switch-to-buffer))
 
 (use-package helm-gitignore :ensure t)
 
@@ -192,7 +204,52 @@
 (use-package wgrep :ensure t)
 (use-package wgrep-ag :ensure t)
 
+;; Treemacs
+(use-package treemacs
+  :defer t
+  :config
+  (treemacs-follow-mode -1)
+  ;; Basic keybindings for treemacs
+  (define-key evil-normal-state-map (kbd "t") 'treemacs-select-window)
+  (global-set-key (kbd "M-0") 'treemacs-select-window)
+  (global-set-key (kbd "C-x t 1") 'treemacs-delete-other-windows)
+  (global-set-key (kbd "C-x t t") 'treemacs)
+  (global-set-key (kbd "C-x t f") 'treemacs-find-file)
+  (treemacs-git-mode 'deferred))
 
+(use-package all-the-icons
+  :ensure t
+  :config
+  ;; You may need to run this command once to install the fonts
+  ; (all-the-icons-install-fonts)
+)
+
+(use-package treemacs-all-the-icons
+  :after treemacs
+  :ensure t
+  :config
+  (treemacs-load-theme "all-the-icons"))
+
+
+;; (use-package treemacs-nerd-icons
+;;   :config
+;;   (treemacs-load-theme "nerd-icons"))
+
+;; Treemacs Projectile integration
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :ensure t)
+
+;; Treemacs Evil integration
+(use-package treemacs-evil
+  :after (treemacs evil)
+  :ensure t)
+
+;; (use-package doom-themes
+;; 	:ensure t
+;; 	:config (doom-themes-treemacs-config))
+
+(evil-define-key 'treemacs treemacs-mode-map (kbd "t") #'treemacs-select-window)
 
 ;; LSP
 (use-package lsp-mode
@@ -206,8 +263,13 @@
          (web-mode . lsp-deferred))
   :commands lsp
   :config
+  ;(define-key lsp-mode-map (kbd "M-,") 'xref-go-back)
+  ;(define-key lsp-mode-map (kbd "M-/") 'lsp-find-references)
+  ;(define-key lsp-mode-map (kbd "M-.") 'lsp-find-definition)
   (setq lsp-prefer-flymake nil  ;; Prefer lsp-ui (flycheck) over flymake
-        lsp-headerline-breadcrumb-enable nil))  ;; Optional: disable headerline breadcrumb
+        lsp-headerline-breadcrumb-enable nil)
+  (setq lsp-clients-clangd-executable "clangd"))  ;; Optional: disable headerline breadcrumb
+
 (use-package lsp-ui
   :ensure t
   :commands lsp-ui-mode
@@ -220,8 +282,12 @@
         lsp-ui-sideline-show-diagnostics t
         lsp-ui-sideline-show-hover t
         lsp-ui-sideline-show-code-actions t
-        lsp-ui-sideline-update-mode 'line))
+        lsp-ui-sideline-update-mode 'line
+		lsp-ui-peek-show-directory t))
 
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (setq fill-column 256))) ;; Adjust the number to your preference
 
 ;; Code Completion
 (use-package company
@@ -244,7 +310,15 @@
   :ensure t
   :config
   (which-key-mode))
+;; YAML Mode
+(use-package yaml-mode
+  :ensure t
+  :mode "\\.ya?ml\\'")
 
+;; JSOM Mode
+(use-package json-mode
+  :ensure t
+  :mode "\\.json\\'")
 
 ;; Configure Go mode
 (use-package go-mode
@@ -260,6 +334,12 @@
 (use-package ccls
   :ensure t
   :hook ((c-mode c++-mode objc-mode) . (lambda () (require 'ccls) (lsp))))
+(use-package clang-format
+  :ensure t
+  :commands (clang-format-region)
+  :config
+  (setq clang-format-style "file")
+  )
 
 ;; Configure python-mode for Python programming
 (use-package python-mode
@@ -306,7 +386,7 @@
   (dap-mode t)
   (dap-ui-mode t)
   (tooltip-mode t)
-	(dap-register-debug-template "C++ LLDB Debug"
+  (dap-register-debug-template "C++ LLDB Debug"
 															 (list :type "lldb-vscode"
 																		 :request "launch"
 																		 :name "C++ LLDB Debug"
@@ -314,8 +394,19 @@
 																		 :program "${workspaceFolder}/a.out"
 																		 :cwd "${workspaceFolder}")))
 
-
-
+(use-package org
+  :ensure t
+  :config
+  (setq org-startup-indented t)
+ (add-hook 'org-mode-hook
+           (lambda ()
+             (define-key evil-motion-state-local-map (kbd "TAB") nil)
+             (define-key evil-normal-state-local-map (kbd "TAB") 'org-cycle)
+             (define-key evil-motion-state-local-map (kbd "<return>") nil)
+             (define-key evil-normal-state-local-map (kbd "<return>") 'org-return)
+             (define-key evil-motion-state-local-map (kbd "<backspace>") nil)
+             (define-key evil-normal-state-local-map (kbd "<backspace>") 'org-table-previous-field)
+             )))
 ;; Rest client
 (use-package restclient
   :ensure t
@@ -325,13 +416,22 @@
   :after (company)
   :config
   (add-to-list 'company-backends 'company-restclient))
+
+
+
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp/leetcode"))
+(use-package leetcode
+  :config
+  (setq leetcode-language "c++")
+  )
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-	 '(company-restclient restclient which-key wgrep-ag web-mode typescript-mode python-mode nerd-icons move-text lsp-ui ivy hl-todo helm-projectile helm-gitignore gruber-darker-theme go-mode flycheck exec-path-from-shell evil dap-mode company-box ccls all-the-icons ag)))
+   '(treemacs-all-the-icons all-the-icons leetcode company-restclient restclient dap-mode web-mode typescript-mode python-mode clang-format ccls go-mode json-mode yaml-mode which-key flycheck company-box company lsp-ui lsp-mode treemacs-evil treemacs-projectile treemacs-nerd-icons treemacs wgrep-ag wgrep ag helm-gitignore helm-projectile helm move-text counsel swiper ivy projectile hl-todo exec-path-from-shell gruber-darker-theme nerd-icons evil)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
